@@ -1,3 +1,8 @@
+---
+https://ds-galaxy-1.onrender.com
+---
+
+
 # DS Galaxy — Data Science & AI Interview Universe
 
 An interactive **3D educational platform** for Data Science and AI Engineering interview preparation. Every question is a glowing planet orbiting its topic ring in a full 3D galaxy — click a planet to open the question with its model answer, practice your own answer and get an instant review, and ask **RAVI** (the built-in tutor chatbot) whenever you are stuck.
@@ -117,3 +122,8 @@ Set `GEMINI_API_KEY` in the backend's environment and restart it — evaluation 
 - Email: [bkushirt@gmail.com](https://mail.google.com/mail/?view=cm&fs=1&to=bkushirt@gmail.com)
 - LinkedIn: [raviteja-buddha](https://www.linkedin.com/in/raviteja-buddha-7a9279244)
 - GitHub: [Kushi153](https://github.com/Kushi153)
+
+---
+site on live 👇👇
+https://ds-galaxy-1.onrender.com
+---
