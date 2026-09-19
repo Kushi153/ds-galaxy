@@ -777,3 +777,349 @@ export function mountVisual(card, id) {
   });
   return inst;
 }
+
+// ============================================================
+// 12. ML PROJECT LIFECYCLE — the full machine-learning loop
+// ============================================================
+VIZ["ml-loop"] = {
+  title: "The ML Project Lifecycle",
+  note: "Machine learning is a loop, not a line: data feeds a model, the model makes predictions, errors feedback and improve the next round.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    const nodes = [
+      { x: 0.5, y: 0.14, t: "1. Collect Data", c: "#4dd0e1" },
+      { x: 0.82, y: 0.42, t: "2. Clean & Prepare", c: "#4ade80" },
+      { x: 0.68, y: 0.82, t: "3. Train Model", c: "#6c8cff" },
+      { x: 0.32, y: 0.82, t: "4. Evaluate", c: "#ffd166" },
+      { x: 0.18, y: 0.42, t: "5. Deploy", c: "#ff6b8b" },
+    ].map(n => ({ ...n, X: n.x * w, Y: n.y * h, R: Math.min(w, h) * 0.105 }));
+    const ring = Math.min(w, h) * 0.34;
+    const cx = w / 2, cy = h / 2;
+    let raf = 0, t = 0;
+
+    function frame() {
+      t++;
+      ctx.clearRect(0, 0, w, h);
+      grid(ctx, w, h, 48);
+      // orbit ring
+      ctx.beginPath();
+      ctx.arc(cx, cy, ring, 0, TAU);
+      ctx.strokeStyle = "rgba(120,140,255,0.18)"; ctx.lineWidth = 2; ctx.stroke();
+      // rotating packet along the ring
+      const ang = (t / 120) % 1;
+      const packetX = cx + Math.cos(ang * TAU - Math.PI / 2) * ring;
+      const packetY = cy + Math.sin(ang * TAU - Math.PI / 2) * ring;
+      // connections
+      for (let i = 0; i < nodes.length; i++) {
+        const a = nodes[i], b = nodes[(i + 1) % nodes.length];
+        ctx.beginPath(); ctx.moveTo(a.X, a.Y); ctx.lineTo(b.X, b.Y);
+        ctx.strokeStyle = "rgba(160,175,255,0.22)"; ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      // feedback arrow (evaluate -> collect) dashed
+      ctx.beginPath();
+      ctx.moveTo(nodes[3].X - 6, nodes[3].Y - 30);
+      ctx.quadraticCurveTo(cx, cy - ring - 42, nodes[0].X + 6, nodes[0].Y - 6);
+      ctx.setLineDash([5, 5]);
+      ctx.strokeStyle = "rgba(255,209,102,0.5)"; ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.setLineDash([]);
+      // nodes with pulse as the packet passes
+      nodes.forEach((n, i) => {
+        const na = i / nodes.length - 0.25;
+        const d = Math.abs(((ang - na) % 1 + 1.5) % 1 - 0.5);
+        const pulse = d < 0.09 ? 1 - d / 0.09 : 0;
+        ctx.beginPath(); ctx.arc(n.X, n.Y, n.R + pulse * 5, 0, TAU);
+        ctx.fillStyle = "rgba(8,14,34,0.95)"; ctx.fill();
+        ctx.strokeStyle = n.c; ctx.lineWidth = 2 + pulse * 1.6; ctx.stroke();
+        label(ctx, n.t, n.X, n.Y + 3, "rgba(235,240,255,0.95)", "center");
+      });
+      // packet
+      ctx.beginPath(); ctx.arc(packetX, packetY, 5, 0, TAU);
+      ctx.fillStyle = "#fff"; ctx.fill();
+      label(ctx, "errors & new data feed back → the loop never ends", w / 2, h - 8, "rgba(255,209,102,0.75)", "center");
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};
+
+// ============================================================
+// 13. TYPES OF MACHINE LEARNING — supervised vs unsupervised vs RL
+// ============================================================
+VIZ["ml-types"] = {
+  title: "Types of Machine Learning",
+  note: "Supervised learns from labeled examples. Unsupervised finds structure without labels. Reinforcement learns by acting and receiving rewards.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height, m = 22;
+    const panelW = (w - 2 * m - 24) / 3;
+    let raf = 0, t = 0;
+    const panels = [
+      { title: "Supervised", sub: "with labels", c: "#4ade80" },
+      { title: "Unsupervised", sub: "no labels", c: "#6c8cff" },
+      { title: "Reinforcement", sub: "reward-based", c: "#ffd166" },
+    ];
+
+    function frame() {
+      t++;
+      ctx.clearRect(0, 0, w, h);
+      panels.forEach((p, pi) => {
+        const x0 = m + pi * (panelW + 12);
+        ctx.strokeStyle = "rgba(200,215,255,0.25)";
+        ctx.strokeRect(x0, m + 16, panelW, h - 2 * m - 16);
+        label(ctx, p.title, x0 + panelW / 2, m + 4, p.c, "center");
+        label(ctx, p.sub, x0 + panelW / 2, h - m + 2, "rgba(200,212,240,0.7)", "center");
+        const rnd = () => {
+          const s = Math.sin((pi + 1) * 999 + Math.floor(t / 26) * 77.7) * 43758.5453;
+          return s - Math.floor(s);
+        };
+        for (let i = 0; i < 14; i++) {
+          const px = x0 + 10 + rnd() * (panelW - 20);
+          const py = m + 30 + rnd() * (h - 2 * m - 60);
+          if (pi === 0) {
+            ctx.beginPath(); ctx.arc(px, py, 3.5, 0, TAU);
+            ctx.fillStyle = i % 2 ? "#4ade80" : "#ff6b8b"; ctx.fill();
+            label(ctx, i % 2 ? "✓" : "✗", px + 6, py + 3, "rgba(255,255,255,0.75)");
+          } else if (pi === 1) {
+            ctx.beginPath(); ctx.arc(px, py, 3.5, 0, TAU);
+            ctx.fillStyle = "rgba(108,140,255,0.6)"; ctx.fill();
+          } else {
+            ctx.beginPath(); ctx.arc(px, py, 3.5, 0, TAU);
+            ctx.fillStyle = "rgba(255,209,102,0.55)"; ctx.fill();
+          }
+        }
+        if (pi === 2) {
+          // agent moves toward + reward
+          const ax = x0 + panelW / 2 + Math.sin(t / 40) * (panelW / 4);
+          const ay = h / 2 + 8 + Math.cos(t / 55) * 24;
+          ctx.beginPath(); ctx.arc(ax, ay, 5, 0, TAU);
+          ctx.fillStyle = "#ffd166"; ctx.fill();
+          label(ctx, "R +1", ax + 10, ay - 8, "rgba(255,209,102,0.9)");
+        }
+      });
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};
+
+// ============================================================
+// 14. REGULARIZATION L1 vs L2 — weights shrink to zero / near zero
+// ============================================================
+VIZ["reg-l1l2"] = {
+  title: "Regularization: L1 vs L2",
+  note: "Both penalize big weights to fight overfitting. L1 (Lasso) pushes weights exactly to zero — built-in feature selection. L2 (Ridge) shrinks them near zero.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height, m = 26;
+    let lambda = 0.02, dir = 1, raf = 0, tick = 0;
+    const w0 = [0.9, 0.75, 0.6, 0.45, 0.3, 0.18, 0.1, 0.05]; // initial weights
+
+    function frame() {
+      tick++;
+      if (tick % 3 === 0) {
+        lambda += dir * 0.006;
+        if (lambda > 0.35) dir = -1;
+        if (lambda < 0.02) dir = 1;
+      }
+      ctx.clearRect(0, 0, w, h);
+      grid(ctx, w, h, 46);
+      const y0 = h - m;
+      w0.forEach((wi, i) => {
+        const bx = m + 24 + i * ((w - 2 * m - 40) / w0.length);
+        const l1 = Math.max(0, wi - lambda * 2.1);          // hard threshold → 0
+        const l2 = wi / (1 + lambda * 3.4);                 // smooth shrink
+        const bh1 = l1 * (h - 2 * m), bh2 = l2 * (h - 2 * m);
+        // L1 bar
+        ctx.fillStyle = "rgba(108,140,255,0.75)";
+        ctx.fillRect(bx - 9, y0 - bh1, 8, bh1);
+        // L2 bar
+        ctx.fillStyle = "rgba(255,107,139,0.7)";
+        ctx.fillRect(bx + 1, y0 - bh2, 8, bh2);
+        if (l1 === 0) label(ctx, "0", bx - 5, y0 - bh1 - 6, "rgba(108,140,255,0.95)", "center");
+      });
+      label(ctx, "blue = L1 (Lasso)   pink = L2 (Ridge)", m + 6, m + 2);
+      label(ctx, `λ = ${lambda.toFixed(2)} — stronger penalty →`, w - m, h - 8, "rgba(200,212,240,0.8)", "right");
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};
+
+// ============================================================
+// 15. LOGISTIC REGRESSION — sigmoid squeeze into a probability
+// ============================================================
+VIZ["log-reg"] = {
+  title: "Logistic Regression & the Sigmoid",
+  note: "Any input is squeezed through the S-curve into 0..1 — a probability. Below 0.5 class A, above class B. That is classification from regression.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height, m = 32;
+    let raf = 0, t = 0;
+    const sig = (x) => 1 / (1 + Math.exp(-x));
+
+    function frame() {
+      t++;
+      ctx.clearRect(0, 0, w, h);
+      grid(ctx, w, h); axes(ctx, w, h, m);
+      // sigmoid curve
+      ctx.beginPath();
+      for (let i = 0; i <= 100; i++) {
+        const x = (i / 100) * 10 - 5;
+        const px = xy((x + 5) / 10, w, m);
+        const py = h - m - sig(x) * (h - 2 * m);
+        i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.strokeStyle = "#6c8cff"; ctx.lineWidth = 2.5; ctx.stroke();
+      // 0.5 threshold line
+      const ty = h - m - 0.5 * (h - 2 * m);
+      ctx.beginPath(); ctx.moveTo(m, ty); ctx.lineTo(w - m, ty);
+      ctx.setLineDash([5, 5]); ctx.strokeStyle = "rgba(255,209,102,0.6)"; ctx.lineWidth = 1.2; ctx.stroke(); ctx.setLineDash([]);
+      label(ctx, "0.5 decision boundary", w - m - 6, ty - 6, "rgba(255,209,102,0.85)", "right");
+      // moving sample riding the curve
+      const x = Math.sin(t / 90) * 4.4;
+      const y = sig(x);
+      const px = xy((x + 5) / 10, w, m), py = h - m - y * (h - 2 * m);
+      ctx.beginPath(); ctx.arc(px, py, 5.5, 0, TAU);
+      ctx.fillStyle = y >= 0.5 ? "#ff6b8b" : "#4ade80"; ctx.fill();
+      label(ctx, `P(y=1) = ${y.toFixed(2)} → class ${y >= 0.5 ? "B" : "A"}`, px, py - 12, "#fff", "center");
+      label(ctx, "input →", w - m, h - 8, "rgba(180,195,255,0.8)", "right");
+      label(ctx, "probability ↑", 6, m + 4);
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};
+
+// ============================================================
+// 16. ROC CURVE & AUC — sweeping the threshold
+// ============================================================
+VIZ["roc"] = {
+  title: "ROC Curve & AUC",
+  note: "Every threshold gives one (FPR, TPR) point. Sweeping it traces the ROC curve; the area under it (AUC) measures how well the model ranks classes.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height, m = 34;
+    let th = 0.02, dir = 1, raf = 0, tick = 0;
+    const ill = points(30, w, h, 3).map(([a]) => 0.55 + a * 0.42);
+    const ok = points(30, w, h, 4).map(([a]) => a * 0.5);
+
+    function frame() {
+      tick++;
+      if (tick % 2 === 0) {
+        th += dir * 0.012;
+        if (th > 0.98) dir = -1;
+        if (th < 0.02) dir = 1;
+      }
+      const tpr = ill.filter((s) => s >= th).length / ill.length;
+      const fpr = ok.filter((s) => s >= th).length / ok.length;
+      ctx.clearRect(0, 0, w, h);
+      // left: distributions + moving threshold
+      const lw = w * 0.42;
+      grid(ctx, lw, h, 40);
+      ctx.save();
+      ctx.beginPath(); ctx.rect(0, 0, lw + 2, h); ctx.clip();
+      ok.forEach((s, i) => {
+        ctx.beginPath(); ctx.arc(xy(s, lw, m), h - m - 10 - (i % 5) * 7, 3, 0, TAU);
+        ctx.fillStyle = "rgba(108,140,255,0.75)"; ctx.fill();
+      });
+      ill.forEach((s, i) => {
+        ctx.beginPath(); ctx.arc(xy(s, lw, m), h - m - 10 - (i % 5) * 7, 3, 0, TAU);
+        ctx.fillStyle = "rgba(255,107,139,0.8)"; ctx.fill();
+      });
+      const tx = xy(th, lw, m);
+      ctx.beginPath(); ctx.moveTo(tx, m); ctx.lineTo(tx, h - m);
+      ctx.strokeStyle = "#ffd166"; ctx.lineWidth = 2; ctx.stroke();
+      label(ctx, "scores + threshold", m + 4, m + 2);
+      ctx.restore();
+      // right: ROC space with AUC fill
+      const rx0 = lw + 24, rw = w - rx0 - m;
+      ctx.strokeStyle = "rgba(200,215,255,0.3)";
+      ctx.strokeRect(rx0, m, rw, h - 2 * m);
+      ctx.strokeStyle = "rgba(200,215,255,0.18)";
+      ctx.beginPath(); ctx.moveTo(rx0, h - m); ctx.lineTo(rx0 + rw, m); ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(rx0, h - m);
+      for (let i = 0; i <= 40; i++) {
+        const f = i / 40;
+        const tp = Math.min(1, Math.pow(f, 0.32));
+        ctx.lineTo(rx0 + f * rw, h - m - tp * (h - 2 * m));
+      }
+      ctx.lineTo(rx0 + rw, h - m);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(74,222,128,0.14)"; ctx.fill();
+      ctx.beginPath();
+      for (let i = 0; i <= 40; i++) {
+        const f = i / 40;
+        const tp = Math.min(1, Math.pow(f, 0.32));
+        const px = rx0 + f * rw, py = h - m - tp * (h - 2 * m);
+        i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.strokeStyle = "#4ade80"; ctx.lineWidth = 2.2; ctx.stroke();
+      label(ctx, "ROC — TPR vs FPR", rx0 + rw / 2, m + 14, "rgba(220,228,255,0.9)", "center");
+      ctx.beginPath(); ctx.arc(rx0 + fpr * rw, h - m - tpr * (h - 2 * m), 5, 0, TAU);
+      ctx.fillStyle = "#ffd166"; ctx.fill();
+      label(ctx, `AUC ≈ 0.9 · threshold ${th.toFixed(2)}`, rx0 + rw / 2, h - 8, "rgba(200,212,240,0.85)", "center");
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};
+
+// ============================================================
+// 17. BACKPROPAGATION — error flows backward, weights adjust
+// ============================================================
+VIZ["backprop"] = {
+  title: "Backpropagation",
+  note: "Forward: inputs produce a prediction. Backward: the error flows back through the network, and every weight nudges to reduce it. Repeat millions of times.",
+  build(canvas) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    const layers = [3, 4, 4, 1];
+    const nodes = layers.map((n, li) =>
+      Array.from({ length: n }, (_, i) => ({
+        x: 46 + li * ((w - 92) / (layers.length - 1)),
+        y: h / 2 + (i - (n - 1) / 2) * (h / 6.5),
+      })));
+    let raf = 0, t = 0;
+    const phaseLen = 150;
+
+    function frame() {
+      t++;
+      const ph = (t % (phaseLen * 2)) / phaseLen;
+      const fwd = ph < 1;
+      const p = fwd ? ph : ph - 1;
+      ctx.clearRect(0, 0, w, h);
+      grid(ctx, w, h, 48);
+      for (let li = 0; li < layers.length - 1; li++) {
+        for (const a of nodes[li]) for (const b of nodes[li + 1]) {
+          const litF = fwd && p > li / 3 && p < (li + 1.4) / 3;
+          const litB = !fwd && p > (3 - li - 1) / 3 && p < (3 - li + 0.4) / 3;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = litF ? "rgba(74,222,128,0.55)" : litB ? "rgba(255,107,139,0.6)" : "rgba(120,140,255,0.10)";
+          ctx.lineWidth = litF || litB ? 1.8 : 0.8; ctx.stroke();
+        }
+      }
+      nodes.forEach((layer, li) => layer.forEach((n) => {
+        const litF = fwd && p > li / 3 && p < (li + 1.4) / 3;
+        const litB = !fwd && p > (3 - li - 1) / 3 && p < (3 - li + 0.4) / 3;
+        ctx.beginPath(); ctx.arc(n.x, n.y, litF || litB ? 8 : 6, 0, TAU);
+        ctx.fillStyle = litF ? "rgba(74,222,128,0.8)" : litB ? "rgba(255,107,139,0.8)" : "rgba(108,140,255,0.3)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(200,215,255,0.4)"; ctx.lineWidth = 1; ctx.stroke();
+      }));
+      label(ctx, fwd ? "FORWARD — making a prediction" : "BACKWARD — error updates the weights",
+        w / 2, 18, fwd ? "rgba(74,222,128,0.95)" : "rgba(255,107,139,0.95)", "center");
+      label(ctx, fwd ? "input → layers → prediction" : "loss ← gradients ← weights", w / 2, h - 10,
+        "rgba(200,212,240,0.75)", "center");
+      raf = requestAnimationFrame(frame);
+    }
+    frame();
+    return { stop: () => cancelAnimationFrame(raf) };
+  },
+};

@@ -13,7 +13,14 @@ An interactive **3D educational platform** for Data Science and AI Engineering i
 
 ## Features
 
-### The Galaxy
+### ML Galaxy — machine learning, taught pin to pin
+- A **second galaxy**: the intro screen has a dedicated "Learn Machine Learning Visually" box that warps you through hyperspace into an ML universe of 17 lessons
+- **Learning path in 3 rings**: Foundations (What is ML, types of ML, linear/logistic regression, gradient descent) → Core Algorithms (KNN, trees & forests, SVM, K-Means, neural nets, backpropagation) → Evaluation & Tuning (overfitting, L1/L2 regularization, confusion matrix, ROC/AUC, PCA, activations)
+- Every lesson pairs a **live animated demo** with a plain-words explanation, key points, and a ready-to-use **interview one-liner**
+- **Progress is saved**: lessons you finish light up gold on the constellation map (stored locally)
+- The same demos also play inside RAVI chat — ask "explain gradient descent" and watch it move
+
+### The Galaxy (question bank)
 - **1,577 questions across 62 topics** — Python, SQL, Statistics, Machine Learning, Deep Learning, Transformers, LLMs, RAG, AI Agents, MLOps, HR and more
 - Full 3D starfield galaxy built with Three.js — every question is a clickable planet
 - Topic wheel for instant navigation, instant search, quiz mode, keyboard navigation (arrow keys, Escape)

@@ -3,6 +3,7 @@ import questionsData from "./data/questions.json";
 import { createScene, colorFor } from "./scene.js";
 import { getAnswer, raviChat, evaluateAnswer, health } from "./ai.js";
 import { mountVisual } from "./visuals.js";
+import { openMLGalaxy } from "./mlgalaxy.js";
 
 // ---------- DOM ----------
 const $ = (id) => document.getElementById(id);
@@ -104,6 +105,7 @@ $("enter-btn").addEventListener("click", () => {
   intro.classList.add("hidden");
   scene.setFocus(null);
 });
+$("ml-btn").addEventListener("click", () => openMLGalaxy());
 
 // ---------- Shiva Eye cinematic (infinite zoom-through) ----------
 // Phases: reveal (eye appears) -> deeper (keeps zooming, scroll feeds it)
@@ -497,13 +499,18 @@ function addMsg(role, text) {
   return div;
 }
 
-// Attach an interactive demo card under the latest AI message
+// Attach an interactive demo card under the latest AI message.
+// Keeps at most one live animation: the previous card's demo is stopped
+// (it stays visible as a still frame) to avoid runaway loops.
 function addVisualCard(id) {
   if (!id) return;
+  const prev = chatMsgs.querySelector(".vsl-card:last-of-type");
+  if (prev && typeof prev.__vslStop === "function") prev.__vslStop();
   const card = document.createElement("div");
   card.className = "vsl-card";
   chatMsgs.appendChild(card);
-  mountVisual(card, id);
+  const inst = mountVisual(card, id);
+  card.__vslStop = inst && typeof inst.stop === "function" ? inst.stop : null;
   chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
 
