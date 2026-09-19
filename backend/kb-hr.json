@@ -1,0 +1,100 @@
+{
+  "frameworks": [
+    {
+      "k": "tell-me-about-yourself",
+      "kw": ["tell me about yourself", "introduce yourself", "about yourself", "walk me through your resume", "self introduction"],
+      "name": "Present-Past-Future",
+      "guide": "Structure (60-90 seconds): PRESENT — who you are professionally right now ('I am a data science enthusiast with hands-on projects in ML and a B.Tech in X'). PAST — the one or two most relevant stops before now ('I built a churn-prediction model end to end and an LLM-based Q&A system, which taught me both classical ML and modern GenAI'). FUTURE — why this role is the natural next step ('I want to apply these skills to real production data at scale, which is exactly what this role offers'). End with an offer: 'Happy to go deeper on any project.' Never recite your resume chronologically; never mention personal details like family or school marks."
+    },
+    {
+      "k": "why-hire-you",
+      "kw": ["why should we hire you", "why should i hire you", "what makes you different", "why you"],
+      "name": "Skill-Fit-Evidence",
+      "guide": "Answer in three beats: (1) SKILL — 'My skill set matches your requirement: strong Python, SQL, ML fundamentals, plus LLM/RAG experience that many candidates lack.' (2) FIT — 'I learn fast and ship — my projects went from raw data to working demos, not just notebooks.' (3) EVIDENCE — close with one concrete proof point with a number if possible ('my churn model reached 87% recall on imbalanced data'). Confidence without arrogance: you are matching their need, not begging."
+    },
+    {
+      "k": "strengths-weaknesses",
+      "kw": ["strengths and weaknesses", "your weakness", "greatest weakness", "strengths weakness", "what are your strengths"],
+      "name": "Strength-Proof / Weakness-Growth",
+      "guide": "Strengths: pick 2 relevant to the role, each with a one-line proof ('I am persistent with data problems — I once debugged a silent feature leak that inflated our score; found it by distracting my own good results'). Weaknesses: choose a REAL but non-fatal one, show awareness and the concrete fix in progress ('I used to jump into modeling before fully understanding the business question; now I write a one-paragraph problem statement and get stakeholder sign-off before touching data'). Never say 'I am a perfectionist' or 'I work too hard' — interviewers hear that as evasion."
+    },
+    {
+      "k": "why-this-company",
+      "kw": ["why this company", "why do you want to work", "why our company", "why us"],
+      "name": "Company-Role-You",
+      "guide": "Show you researched them: (1) COMPANY — one specific fact ('your product serves X million users' or 'your recent move into AI-powered features'), (2) ROLE — how it matches your trajectory ('a role combining classical ML with GenAI is exactly where I have built my projects'), (3) YOU — what you bring to that specific context. Never generic praise like 'you are a great company' — that answers nothing."
+    },
+    {
+      "k": "salary-expectation",
+      "kw": ["salary expectation", "expected salary", "salary requirements", "how much salary", "current ctc", "notice period"],
+      "name": "Defer-Then-Range",
+      "guide": "First try to defer gracefully: 'I am flexible and open — may I know the band budgeted for this role?' If pressed, give a researched range, not a number: 'Based on my skills and market data for this role in this city, I am looking at roughly X to Y; I am confident we can find a fair spot within that.' Never apologize, never go first if you can avoid it, and never say 'whatever you give is fine' — it signals you do not know your market value."
+    },
+    {
+      "k": "career-gap",
+      "kw": ["career gap", "gap in resume", "gap in employment", "why the gap", "education gap", "year drop"],
+      "name": "Honest-Brief-Forward",
+      "guide": "The formula: (1) honest one-line reason (health, family responsibility, upskilling, exam preparation), (2) what you did productively in that time (courses, projects, certifications — be specific), (3) pivot to readiness NOW ('that period made my fundamentals stronger; here is the project I completed'). Keep it to 20-30 seconds, no over-explaining, no apology. Confidence moves the conversation forward; dwelling invites more questions."
+    },
+    {
+      "k": "failure-question",
+      "kw": ["tell me about a failure", "time you failed", "biggest failure", "mistake you made", "project that failed"],
+      "name": "STAR + Lesson + Change",
+      "guide": "Use STAR but the S and T are brief — spend your time on the lesson: Situation ('our model looked great offline but dropped in production'), Task (find and fix the cause), Action (root-caused a training-serving skew in one feature — the offline pipeline used a corrected table while production saw raw data), Result (fixed the pipeline, added a parity test to CI, and that bug-class never returned). The story must end with a CHANGE in how you work — that is what senior interviewers listen for."
+    },
+    {
+      "k": "conflict-question",
+      "kw": ["conflict with teammate", "disagreement with", "difficult coworker", "conflict resolution", "team conflict"],
+      "name": "Situation-Empathy-Resolution",
+      "guide": "Describe a real disagreement professionally — attack the problem, never the person: 'My teammate wanted to ship a model quickly; I believed the data quality was not ready. I listened first to understand his deadline pressure, then proposed a compromise: ship a simple rule-based version now, with the ML model as a fast-follow once data issues were fixed.' Show: you listened, you focused on the shared goal (the product), and the resolution was concrete. Never badmouth anyone."
+    },
+    {
+      "k": "five-year-plan",
+      "kw": ["five year plan", "where do you see yourself", "5 years from now", "career goals", "long term goals"],
+      "name": "Growth-Within-Role",
+      "guide": "Balance ambition with commitment: 'In five years I see myself as a strong senior contributor here — owning end-to-end ML systems end to end, mentoring juniors, and being the person the team trusts with ambiguous problems. I want to grow deep technical expertise first, then broaden into leadership.' Avoid 'I want to be a manager' (fine, but tone-deaf for a technical role) and 'I want to start my own company' (invites doubts about retention)."
+    },
+    {
+      "k": "sell-me-this-pen",
+      "kw": ["sell me this pen", "sell this product", "sell me something"],
+      "name": "Ask-Then-Match",
+      "guide": "The trick: do NOT start selling. Ask questions first: 'May I ask — when did you last buy a pen, and what mattered — smoothness, price, gifting?' Then sell to what they said: 'You mentioned you sign important documents daily — this pen writes cleanly on any paper and never leaks in a shirt pocket; let me show you.' Lesson you should state at the end: 'Good selling is diagnosing the need first, then matching — not pitching features blindly.' That meta-comment is what earns the point in interviews."
+    },
+    {
+      "k": "why-should-not-hire",
+      "kw": ["why should we not hire you", "reason not to hire", "downsides of hiring you"],
+      "name": "Honest-Low-Stakes + Offset",
+      "guide": "A trap for either overconfident denial or self-destruction. Give one honest, non-fatal truth with its offset: 'If I had to name one — I have strong project experience but limited exposure to very large production systems at scale, which a seasoned engineer here would have. That is exactly why this role excites me: it is the environment where I will close that gap fastest.' Honest, calm, and turns the weakness into motivation."
+    },
+    {
+      "k": "pressure-deadline",
+      "kw": ["work under pressure", "handle stress", "tight deadline", "deadline story", "prioritize work"],
+      "name": "Prioritize-Communicate-Deliver",
+      "guide": "Story shape: 'Three deliverables landed in the same week. I listed them by business impact, communicated immediately with all three stakeholders about realistic timelines, negotiated scope on the least critical, and delivered the critical one early.' Show a SYSTEM for pressure (prioritize by impact, communicate early, renegotiate scope) rather than heroic all-nighters — interviewers hear 'I work weekends' as poor planning."
+    },
+    {
+      "k": "leadership-question",
+      "kw": ["leadership experience", "led a team", "take initiative", "ownership example", "led a project"],
+      "name": "Initiative-Others-Outcome",
+      "guide": "Leadership does not require a title: 'Our hackathon team had no plan on day two. I split the work into three tracks by strength, set a checkpoint schedule, and took the hardest integration piece myself.' Show: you took initiative, you multiplied others (not just did everything alone), and there is a measurable outcome. Mention one thing you would do differently — real leaders reflect."
+    },
+    {
+      "k": "questions-for-us",
+      "kw": ["any questions for us", "do you have questions", "questions you have", "ask us anything"],
+      "name": "Always ask — 3 levels",
+      "guide": "Never say 'No questions' — it reads as disinterest. Ask one from each level: (1) ROLE — 'What does success look like in the first 90 days?' (2) TEAM — 'How is the data/ML work split between research and production support?' (3) GROWTH — 'How do people typically grow here after two years?' These show you are already imagining doing the job."
+    },
+    {
+      "k": "motivation-passion",
+      "kw": ["why data science", "why this field", "what motivates you", "passion for", "why ml", "why ai"],
+      "name": "Moment-Journey-Future",
+      "guide": "Anchor in a real moment, not abstractions: 'In my first project, raw rows turned into a prediction that a real user acted on — seeing math change a decision hooked me.' Then the journey (what you learned since), then the future you are moving toward. 'Passion' claimed without a story is noise; one specific moment beats ten adjectives."
+    },
+    {
+      "k": "feedback-criticism",
+      "kw": ["handle criticism", "receive feedback", "negative feedback", "review criticism"],
+      "name": "Non-defensive + Applied",
+      "guide": "'My mentor once told me my dashboards were technically correct but unreadable. It stung, then it helped: I studied data-viz principles, rebuilt them, and now I show drafts to end users before finalizing.' Formula: you did not get defensive, you extracted the actionable core, you applied it, and it became a strength. One small real story beats generic claims of open-mindedness."
+    }
+  ]
+}

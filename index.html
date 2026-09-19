@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DS Galaxy — AI-Powered Interview Prep in 3D</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <canvas id="bg-canvas"></canvas>
+
+  <div id="loader"><div>Gathering the galaxy</div><div class="bar"><i></i></div></div>
+
+  <div id="intro">
+    <h1>DS Galaxy</h1>
+    <p class="sub">
+      A 3D interview-prep universe: the <b>Master Data Scientist Question Bank</b>
+      plus the <b>AI Engineering Interview Questions</b> repo, arranged as orbiting
+      topic worlds. Practice with the STAR method, get AI coaching, and prepare smarter.
+    </p>
+    <div class="stats">
+      <div><b id="stat-sections">–</b><span>Topics</span></div>
+      <div><b id="stat-questions">–</b><span>Questions</span></div>
+      <div><b id="stat-notes">–</b><span>Notes</span></div>
+    </div>
+    <button id="enter-btn">Enter the Galaxy</button>
+    <p class="ai-pill" id="ai-status">Checking RAVI…</p>
+    <p class="credit">Sources: Sumit Sir's question bank · Outcome School's AI Engineering repo</p>
+    <p class="credit">Best on desktop · Drag to orbit, scroll to zoom</p>
+  </div>
+
+  <div id="topbar" class="panel">
+    <span class="logo">DS Galaxy</span>
+    <input id="search" type="text" placeholder="Search 1500+ questions…" autocomplete="off" />
+    <button id="practice-btn" class="tbtn" title="Practice with STAR method">Practice</button>
+    <button id="quiz-btn" class="tbtn" title="Random quiz question">Quiz me</button>
+    <button id="reset-btn" class="tbtn" title="Reset camera">Reset view</button>
+  </div>
+
+  <div id="wheel" class="panel"></div>
+
+  <div id="tooltip"></div>
+
+  <div id="qpanel" class="panel">
+    <button class="close" id="qclose">Close</button>
+    <div>
+      <span class="tag" id="q-tag">Topic</span>
+      <h3 id="q-title">Question</h3>
+    </div>
+    <div class="scroll">
+      <div class="qtext" id="q-text" style="display:none"></div>
+      <div class="qanswer" id="q-answer" style="display:none">
+        <div class="qanswer-label">Answer</div>
+        <div id="q-answer-text"></div>
+      </div>
+      <div class="note" id="q-note" style="display:none"></div>
+      <div class="qrelated" id="q-related" style="display:none"></div>
+      <div class="qnav">
+        <button class="tbtn" id="q-prev">Prev</button>
+        <span class="qcount" id="q-count"></span>
+        <button class="tbtn" id="q-next">Next</button>
+      </div>
+      <div class="qactions">
+        <button class="tbtn primary" id="q-practice">Practice this</button>
+        <button class="tbtn" id="q-ask-ravi">Ask RAVI</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="panel"></div>
+
+  <!-- STAR practice panel -->
+  <div id="star-panel" class="panel">
+    <button class="close" id="star-close">Close</button>
+    <span class="tag" id="star-tag">Practice · STAR</span>
+    <h3 id="star-q">Question</h3>
+    <div class="star-scroll">
+      <label class="star-label" for="star-answer">Your answer</label>
+      <textarea id="star-answer" placeholder="Answer in your own words. For behavioral questions, try to cover Situation, Task, Action and Result…" rows="6"></textarea>
+      <div class="star-actions">
+        <button id="star-check" class="tbtn primary">Check my answer</button>
+        <button id="star-model" class="tbtn">Show model answer</button>
+      </div>
+      <div id="star-feedback" class="star-feedback" style="display:none">
+        <div class="star-verdict">
+          <span id="star-verdict-badge" class="badge">–</span>
+          <span id="star-score" class="score"></span>
+        </div>
+        <div id="star-feedback-text"></div>
+        <div id="star-breakdown" class="star-breakdown" style="display:none"></div>
+      </div>
+      <div id="star-answer-block" class="star-answer" style="display:none">
+        <div class="star-label">Model answer</div>
+        <div id="star-answer-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RAVI assistant -->
+  <button id="chat-fab" title="Ask RAVI"><span>RAVI</span><i></i></button>
+  <div id="chatbox" class="panel">
+    <div class="chat-head">
+      <span>RAVI <em>your study buddy</em></span>
+      <button id="chat-close">Close</button>
+    </div>
+    <div id="chat-msgs"></div>
+    <div class="chat-suggest" id="chat-suggest">
+      <button class="chip">Explain this simply</button>
+      <button class="chip">Give an example</button>
+      <button class="chip">How to answer in interview</button>
+    </div>
+    <div class="chat-input-row">
+      <input id="chat-input" type="text" placeholder="Ask RAVI anything…" autocomplete="off" />
+      <button id="chat-send" class="tbtn primary">Send</button>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+
+  <!-- Contact footer -->
+  <div id="footer" class="panel">
+    <span class="fname">Raviteja Buddha</span>
+    <a href="https://wa.me/919703504923" target="_blank" rel="noopener" title="WhatsApp: 9703504923">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12.04 2a9.9 9.9 0 0 0-8.4 15.2L2 22l4.9-1.6A9.9 9.9 0 1 0 12.04 2Zm0 1.8a8.1 8.1 0 1 1-4.1 15.1l-.3-.2-2.9.9.9-2.8-.2-.3A8.1 8.1 0 0 1 12.04 3.8Zm-3 3.6c-.2 0-.5 0-.7.3-.2.3-.9.9-.9 2.1s.9 2.4 1 2.6c.2.2 1.8 2.9 4.5 3.9 2.2.9 2.7.7 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.6-.3l-2-1c-.3-.1-.5-.2-.7.1l-1 1.2c-.2.2-.4.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.5-.6c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.4-.4-.6-.4h-.6Z"/></svg>
+    </a>
+    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=bkushirt@gmail.com" target="_blank" rel="noopener" title="Email: bkushirt@gmail.com (opens Gmail)">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6L22 7"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/raviteja-buddha-7a9279244" target="_blank" rel="noopener" title="LinkedIn">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6V21h-4v-5.5c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg>
+    </a>
+    <a href="https://github.com/Kushi153" target="_blank" rel="noopener" title="GitHub">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.4-1.1-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.6-1.4-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.2.1-2.6 0 0 .8-.3 2.8 1a9.4 9.4 0 0 1 5 0c2-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.6.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>
+    </a>
+  </div>
+
+  <div id="hint">Click a planet to open its question · Drag to orbit · Scroll to zoom · Arrows to navigate</div>
+
+  <!-- Shiva Eye cinematic: appears when the galaxy is zoomed out completely -->
+  <div id="eye-cine" aria-hidden="true">
+    <div id="eye-rays"></div>
+    <div id="eye-halo"></div>
+    <img id="eye-img" src="/shiva-eye.webp" alt="" draggable="false" />
+    <div id="eye-red"></div>
+    <div id="eye-caption">Om Namah Shivaya</div>
+    <button id="eye-continue" type="button">Return to the Galaxy</button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
