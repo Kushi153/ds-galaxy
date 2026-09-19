@@ -29,6 +29,7 @@ An interactive **3D educational platform** for Data Science and AI Engineering i
 - Friendly-teacher personality: simple words first, examples, gentle nudges
 - Answers doubts directly in chat, with source chips that jump to the question planet
 - Understands small talk (hi / thanks / bye) and context ("Explain this simply", "Give an example", "How to answer in interview" work on the open question)
+- **Visual Lab**: 11 interactive, animated demos of core ML concepts — gradient descent, linear regression, under/overfitting, K-means, KNN, decision tree splits, neural network forward pass, PCA, confusion matrix & precision/recall trade-off, SVM max-margin, activation functions. Ask RAVI about any of these and the demo plays right inside the chat; a Visual Lab chip row lets you browse all of them, and every matching question panel has a "See it visually" button
 - Optional upgrade: set `GEMINI_API_KEY` in the backend environment and RAVI answers with a real LLM (server-side only — the browser never sees a key)
 
 ### STAR Practice mode

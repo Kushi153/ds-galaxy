@@ -224,6 +224,7 @@ class EvaluateRequest(BaseModel):
 class ChatReply(BaseModel):
     reply: str
     sources: list[dict] = []
+    visual: Optional[str] = None
 
 
 # ------------------------------------------------------------ retrieval
@@ -383,6 +384,54 @@ def get_answer(qid: str):
     }
 
 
+# ------------------------------------------------------------ visual demos
+
+# Doubt keywords -> interactive demo id in src/visuals.js
+_VISUAL_KEYWORDS = [
+    (("gradient descent", "learning rate", "steepest descent", "step size"),
+     "grad-descent", "Gradient Descent"),
+    (("linear regression", "regression line", "least squares", "best fit line",
+      "fit a line", "regression"),
+     "lin-reg", "Linear Regression"),
+    (("overfit", "over-fitting", "underfit", "under-fitting", "high variance",
+      "high bias", "bias variance", "bias-variance", "regulariz", "regularis"),
+     "overfit", "Underfit vs Overfit"),
+    (("k-means", "kmeans", "k means", "clustering", "centroid"),
+     "kmeans", "K-Means Clustering"),
+    (("knn", "k-nearest", "k nearest", "nearest neighbor",
+      "nearest neighbour"),
+     "knn", "K-Nearest Neighbors"),
+    (("decision tree", "decision trees", "random forest", "tree split",
+      "gini", "entropy split", "cart"),
+     "tree", "Decision Tree Splits"),
+    (("neural network", "neural net", "forward pass", "backpropagation",
+      "backprop", "deep network", "perceptron", "neuron"),
+     "nn", "Neural Network Forward Pass"),
+    (("pca", "principal component", "dimensionality reduction",
+      "dimension reduction", "eigenvector", "eigenvalue"),
+     "pca", "PCA"),
+    (("confusion matrix", "precision", "recall", "f1 score", "f1-score",
+      "true positive", "false positive", "tp fp", "classification metric"),
+     "conf-matrix", "Confusion Matrix & Metrics"),
+    (("svm", "support vector", "maximal margin", "hyperplane"),
+     "svm", "Support Vector Machine"),
+    (("activation function", "relu", "sigmoid", "tanh", "softmax",
+      "non-linearity", "nonlinearity", "why non-linear"),
+     "activation", "Activation Functions"),
+]
+
+
+def _visual_for(text: str) -> Optional[dict]:
+    """Match a doubt/question to an interactive demo, if one fits."""
+    t = text.lower()
+    best = None
+    for kws, vid, label in _VISUAL_KEYWORDS:
+        hits = sum(1 for kw in kws if kw in t)
+        if hits and (best is None or hits > best[0]):
+            best = (hits, {"id": vid, "label": label})
+    return best[1] if best else None
+
+
 @app.post("/api/chat", response_model=ChatReply)
 def chat(req: ChatRequest):
     msg = req.message.strip()
@@ -424,6 +473,12 @@ def chat(req: ChatRequest):
         else:
             opener = f"Great question! Here is the clear way to think about {top['text'].rstrip('?')}:"
         parts = [opener, teach]
+        viz = _visual_for(msg) or (_visual_for(top["text"]) if top else None)
+        if viz:
+            parts.append(
+                f"To actually see it, run the {viz['label']} demo below - "
+                "watch it move while you read the notes above."
+            )
         parts.append(
             "Want me to explain it more simply, give another example, or show how to say it "
             "in an interview? Just ask."
@@ -431,7 +486,8 @@ def chat(req: ChatRequest):
         if hits[1:3]:
             rel = " · ".join(f'({h["section"]}) {h["text"]}' for h in hits[1:3])
             parts.append(f"Related in the bank: {rel}")
-        return ChatReply(reply="\n\n".join(parts), sources=hits)
+        return ChatReply(reply="\n\n".join(parts), sources=hits,
+                         visual=viz["id"] if viz else None)
 
     # Nothing conclusive: teach the closest notes directly in the chat
     notes = _closest_notes(msg)
@@ -442,13 +498,16 @@ def chat(req: ChatRequest):
         ]
         for n in notes[:3]:
             parts.append(f"**{n['text'].rstrip('?')}** — {n['answer']}")
+        viz = _visual_for(msg) or _visual_for(notes[0]["text"])
+        if viz:
+            parts.append(f"To see it in action, run the {viz['label']} demo below.")
         parts.append(
             "If you tell me which angle you meant, I will go deeper on that one."
         )
         return ChatReply(reply="\n\n".join(parts), sources=[
             {"id": n["id"], "text": n["text"], "section": n["section"],
              "hasAnswer": True, "score": n["score"]} for n in notes
-        ])
+        ], visual=viz["id"] if viz else None)
 
     # Server-side LLM path (no key ever touches the browser)
     if GEMINI_KEY:
@@ -523,6 +582,20 @@ def _classify_intent(msg: str, question_id: Optional[str]) -> Optional[ChatReply
         return ChatReply(
             reply="All the best for your preparation! Come back anytime a doubt pops up — I will be right here.",
             sources=[],
+        )
+
+    # "Show me visually" - attach an interactive demo
+    viz = _visual_for(msg)
+    if viz and re.search(
+        r"\b(show|visual|draw|diagram|see|animation|animate|demo|graph|picture|plot)\b", low
+    ):
+        return ChatReply(
+            reply=(
+                f"Here is the {viz['label']} demo - watch it move while you read. "
+                "It shows the idea better than words can; press Replay any time."
+            ),
+            sources=[],
+            visual=viz["id"],
         )
 
     # Suggestion-chip intents, anchored to the currently open question

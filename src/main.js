@@ -2,6 +2,7 @@ import "./style.css";
 import questionsData from "./data/questions.json";
 import { createScene, colorFor } from "./scene.js";
 import { getAnswer, raviChat, evaluateAnswer, health } from "./ai.js";
+import { mountVisual } from "./visuals.js";
 
 // ---------- DOM ----------
 const $ = (id) => document.getElementById(id);
@@ -487,6 +488,68 @@ function addMsg(role, text) {
   return div;
 }
 
+// Attach an interactive demo card under the latest AI message
+function addVisualCard(id) {
+  if (!id) return;
+  const card = document.createElement("div");
+  card.className = "vsl-card";
+  chatMsgs.appendChild(card);
+  mountVisual(card, id);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+// ---------- Visual Lab browser (chip row above the chat input) ----------
+const VSL_CATALOG = [
+  ["grad-descent", "Gradient Descent"],
+  ["lin-reg", "Linear Regression"],
+  ["overfit", "Overfitting"],
+  ["kmeans", "K-Means"],
+  ["knn", "KNN"],
+  ["tree", "Decision Trees"],
+  ["nn", "Neural Network"],
+  ["pca", "PCA"],
+  ["conf-matrix", "Confusion Matrix"],
+  ["svm", "SVM"],
+  ["activation", "Activations"],
+];
+
+function showVisualStandalone(id, label) {
+  // Close panels, open chat, show the demo as a teacher-style message
+  if (typeof focusPanel !== "undefined" && focusPanel) focusPanel.classList.remove("open");
+  if (typeof detailPanel !== "undefined" && detailPanel) detailPanel.classList.remove("open");
+  if (!chatBox.classList.contains("open")) openChat();
+  addMsg("user", `Show me ${label} visually`);
+  addMsg(
+    "ai",
+    `Here is the ${label} demo — watch it move while you read. Press Replay any time, and ask me any doubt about what you see.`
+  );
+  addVisualCard(id);
+  chatHistory.push({ role: "user", content: `Show me ${label} visually` });
+  chatHistory.push({
+    role: "assistant",
+    content: `Showing the ${label} interactive demo.`,
+  });
+}
+
+function buildVisualLab() {
+  const bar = document.createElement("div");
+  bar.className = "vsl-bar";
+  const title = document.createElement("span");
+  title.className = "vsl-bar-title";
+  title.textContent = "Visual Lab";
+  bar.appendChild(title);
+  for (const [id, label] of VSL_CATALOG) {
+    const b = document.createElement("button");
+    b.className = "chip vsl-chip";
+    b.textContent = label;
+    b.addEventListener("click", () => showVisualStandalone(id, label));
+    bar.appendChild(b);
+  }
+  const anchor = document.querySelector(".chat-input-row") || $("chat-input").parentElement;
+  anchor.parentElement.insertBefore(bar, anchor);
+}
+buildVisualLab();
+
 function openChat() {
   chatBox.classList.add("open");
   if (!greeted) {
@@ -515,6 +578,8 @@ async function sendChat() {
     );
     thinking.textContent = data.reply;
     chatHistory.push({ role: "assistant", content: data.reply });
+    // Interactive visual demo (if RAVI attached one)
+    addVisualCard(data.visual);
     // Source chips
     if (data.sources?.length) {
       const srcWrap = document.createElement("div");
@@ -553,6 +618,54 @@ $("chat-suggest")
       sendChat();
     })
   );
+
+// ---------- "See it visually" button inside the question panel ----------
+// Frontend copy of the keyword matcher (mirrors backend/_VISUAL_KEYWORDS)
+const VSL_KEYWORDS = [
+  [["gradient descent", "learning rate", "steepest descent", "step size"], "grad-descent", "Gradient Descent"],
+  [["linear regression", "regression line", "least squares", "best fit line", "fit a line", "regression"], "lin-reg", "Linear Regression"],
+  [["overfit", "over-fitting", "underfit", "under-fitting", "high variance", "high bias", "bias variance", "bias-variance", "regulariz", "regularis"], "overfit", "Underfit vs Overfit"],
+  [["k-means", "kmeans", "k means", "clustering", "centroid"], "kmeans", "K-Means Clustering"],
+  [["knn", "k-nearest", "k nearest", "nearest neighbor", "nearest neighbour"], "knn", "K-Nearest Neighbors"],
+  [["decision tree", "decision trees", "random forest", "tree split", "gini", "entropy split", "cart"], "tree", "Decision Tree Splits"],
+  [["neural network", "neural net", "forward pass", "backpropagation", "backprop", "deep network", "perceptron", "neuron"], "nn", "Neural Network Forward Pass"],
+  [["pca", "principal component", "dimensionality reduction", "dimension reduction", "eigenvector", "eigenvalue"], "pca", "PCA"],
+  [["confusion matrix", "precision", "recall", "f1 score", "f1-score", "true positive", "false positive", "classification metric"], "conf-matrix", "Confusion Matrix & Metrics"],
+  [["svm", "support vector", "maximal margin", "hyperplane"], "svm", "Support Vector Machine"],
+  [["activation function", "relu", "sigmoid", "tanh", "softmax", "non-linearity", "nonlinearity"], "activation", "Activation Functions"],
+];
+
+function visualForBankQuestion(section, text) {
+  const hay = `${section || ""} ${text || ""}`.toLowerCase();
+  let best = null;
+  for (const [kws, id, label] of VSL_KEYWORDS) {
+    const hits = kws.filter((kw) => hay.includes(kw)).length;
+    if (hits && (!best || hits > best.hits)) best = { hits, id, label };
+  }
+  return best ? { id: best.id, label: best.label } : null;
+}
+
+const vslQBtn = document.createElement("button");
+vslQBtn.className = "tbtn";
+vslQBtn.textContent = "See it visually";
+vslQBtn.addEventListener("click", () => {
+  const ref = currentQRef;
+  if (!ref) return;
+  const viz = visualForBankQuestion(ref.section, ref.text);
+  if (viz) {
+    showVisualStandalone(viz.id, viz.label);
+  } else {
+    if (!chatBox.classList.contains("open")) openChat();
+    addMsg("user", `Show me a visual demo for: ${ref.text}`);
+    addMsg(
+      "ai",
+      "I do not have a matching animation for this one yet — my Visual Lab covers gradient descent, regression, overfitting, K-means, KNN, decision trees, neural nets, PCA, confusion matrices, SVM and activations. Ask me any of those!"
+    );
+    chatHistory.push({ role: "user", content: `Show me a visual demo for: ${ref.text}` });
+    chatHistory.push({ role: "assistant", content: "No matching demo for that topic yet." });
+  }
+});
+document.querySelector("#qpanel .qactions").appendChild(vslQBtn);
 
 function friendlyError(err) {
   const msg = err?.message || "UNKNOWN";
