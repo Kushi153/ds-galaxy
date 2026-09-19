@@ -66,6 +66,15 @@ function toast(msg, kind = "info") {
   }, 3200);
 }
 
+// Free-tier backend cold start: if any API call is still pending after 9s,
+// tell the user the server is waking up (only shown once per page load).
+let wakeNoticeShown = false;
+window.addEventListener("api-slow", () => {
+  if (wakeNoticeShown) return;
+  wakeNoticeShown = true;
+  toast("RAVI\u2019s server is waking up (free hosting) \u2014 this takes about half a minute, just once.", "info");
+});
+
 // ---------- Scene ----------
 const canvas = $("bg-canvas");
 const scene = createScene(canvas);
