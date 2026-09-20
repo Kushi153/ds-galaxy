@@ -28,14 +28,34 @@
       <div><b id="stat-questions">–</b><span>Questions</span></div>
       <div><b id="stat-notes">–</b><span>Notes</span></div>
     </div>
-    <button id="enter-btn">Enter the Galaxy</button>
-    <button id="ml-btn" class="ml-enter">
-      <span class="ml-enter-icon">🪐</span>
-      <span class="ml-enter-text">
-        <b>Learn Machine Learning Visually</b>
-        <small>ML Galaxy · 17 animated lessons, pin to pin</small>
-      </span>
-    </button>
+    <button id="enter-btn">Enter the Galaxy · Interview Prep</button>
+    <div id="galaxy-grid" class="galaxy-grid">
+      <button class="gal-box" data-gal="ml">
+        <span class="gal-icon">🪐</span>
+        <b>ML Galaxy</b>
+        <small>17 lessons · learn visually</small>
+      </button>
+      <button class="gal-box" data-gal="maths">
+        <span class="gal-icon">📐</span>
+        <b>Maths &amp; Stats</b>
+        <small>12 lessons · learn visually</small>
+      </button>
+      <button class="gal-box" data-gal="rag">
+        <span class="gal-icon">🧠</span>
+        <b>RAG Galaxy</b>
+        <small>10 lessons · learn visually</small>
+      </button>
+      <button class="gal-box" data-gal="dl">
+        <span class="gal-icon">⚡</span>
+        <b>Deep Learning</b>
+        <small>12 lessons · learn visually</small>
+      </button>
+      <button class="gal-box" data-gal="ai">
+        <span class="gal-icon">✨</span>
+        <b>AI Engineering</b>
+        <small>10 lessons · learn visually</small>
+      </button>
+    </div>
     <p class="ai-pill" id="ai-status">Checking RAVI…</p>
     <p class="credit">Sources: Sumit Sir's question bank · Outcome School's AI Engineering repo</p>
     <p class="credit">Best on desktop · Drag to orbit, scroll to zoom</p>
@@ -43,6 +63,7 @@
 
   <div id="topbar" class="panel">
     <span class="logo">DS Galaxy</span>
+    <button id="home-btn" class="tbtn" title="Back to the galaxy menu">⌂ Home</button>
     <input id="search" type="text" placeholder="Search 1500+ questions…" autocomplete="off" />
     <button id="practice-btn" class="tbtn" title="Practice with STAR method">Practice</button>
     <button id="quiz-btn" class="tbtn" title="Random quiz question">Quiz me</button>

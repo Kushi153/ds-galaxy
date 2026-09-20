@@ -13,12 +13,20 @@ An interactive **3D educational platform** for Data Science and AI Engineering i
 
 ## Features
 
-### ML Galaxy — machine learning, taught pin to pin
-- A **second galaxy**: the intro screen has a dedicated "Learn Machine Learning Visually" box that warps you through hyperspace into an ML universe of 17 lessons
-- **Learning path in 3 rings**: Foundations (What is ML, types of ML, linear/logistic regression, gradient descent) → Core Algorithms (KNN, trees & forests, SVM, K-Means, neural nets, backpropagation) → Evaluation & Tuning (overfitting, L1/L2 regularization, confusion matrix, ROC/AUC, PCA, activations)
+### Six galaxies, one universe
+The intro screen is a **galaxy menu**: the interview-prep universe (DS Galaxy) plus **five learning galaxies**, each a full constellation map of animated lessons. Warp through hyperspace into any of them — and a **⌂ Home** button in the top bar always brings you back to the menu.
+
+| Galaxy | Lessons | What it teaches (every idea = live animation) |
+|---|---|---|
+| 🪐 **ML Galaxy** | 17 | ML loop, supervised/unsupervised/RL, linear & logistic regression, gradient descent, KNN, trees & forests, SVM, K-Means, neural nets, backprop, overfitting, L1/L2, confusion matrix, ROC/AUC, PCA, activations |
+| 📐 **Maths & Stats** | 12 | mean vs median, variance & σ, distributions, Central Limit Theorem, confidence intervals, p-values, Bayes' theorem, correlation, vectors & cosine similarity, matrix multiplication, eigenvectors, derivatives |
+| 🧠 **RAG Galaxy** | 10 | the RAG pipeline, embeddings, chunking & overlap, cosine search, top-k ANN search, reranking, prompt assembly, grounding vs hallucination, RAG vs fine-tuning, RAG evaluation |
+| ⚡ **Deep Learning** | 12 | the perceptron, MLPs, backpropagation, activations, CNN convolution, max pooling, RNNs, attention, the transformer, dropout, optimizers (SGD vs Adam), transfer learning |
+| ✨ **AI Engineering** | 10 | tokens & next-token prediction, pretrain→SFT→RLHF, temperature sampling, context windows, prompting patterns, fine-tuning vs RAG, hallucination defenses, agents & tool use, evals, LLMOps |
+
 - Every lesson pairs a **live animated demo** with a plain-words explanation, key points, and a ready-to-use **interview one-liner**
-- **Progress is saved**: lessons you finish light up gold on the constellation map (stored locally)
-- The same demos also play inside RAVI chat — ask "explain gradient descent" and watch it move
+- **Progress is saved per galaxy**: finished lessons light up gold on the constellation map (stored locally)
+- **Back buttons everywhere**: lesson → all lessons → back to DS Galaxy → ⌂ Home to the galaxy menu; Escape works too
 
 ### The Galaxy (question bank)
 - **1,577 questions across 62 topics** — Python, SQL, Statistics, Machine Learning, Deep Learning, Transformers, LLMs, RAG, AI Agents, MLOps, HR and more
@@ -36,7 +44,7 @@ An interactive **3D educational platform** for Data Science and AI Engineering i
 - Friendly-teacher personality: simple words first, examples, gentle nudges
 - Answers doubts directly in chat, with source chips that jump to the question planet
 - Understands small talk (hi / thanks / bye) and context ("Explain this simply", "Give an example", "How to answer in interview" work on the open question)
-- **Visual Lab**: 11 interactive, animated demos of core ML concepts — gradient descent, linear regression, under/overfitting, K-means, KNN, decision tree splits, neural network forward pass, PCA, confusion matrix & precision/recall trade-off, SVM max-margin, activation functions. Ask RAVI about any of these and the demo plays right inside the chat; a Visual Lab chip row lets you browse all of them, and every matching question panel has a "See it visually" button
+- **Visual Lab**: **56 interactive, animated demos** of ML, maths, RAG, deep-learning and AI concepts. Ask RAVI about any of them ("explain the central limit theorem", "how does attention work") and the demo plays right inside the chat; a Visual Lab chip row lets you browse all of them, and matching question panels have a "See it visually" button
 - Optional upgrade: set `GEMINI_API_KEY` in the backend environment and RAVI answers with a real LLM (server-side only — the browser never sees a key)
 
 ### STAR Practice mode
@@ -91,10 +99,16 @@ Set `GEMINI_API_KEY` in the backend's environment and restart it — evaluation 
 ## Project Structure
 
 ```
-├── index.html              # App shell
+├── index.html              # App shell + galaxy menu (6 galaxies)
 ├── src/
 │   ├── main.js             # UI wiring: panels, practice, RAVI chat
 │   ├── scene.js            # Three.js galaxy + Shiva eye cinematic triggers
+│   ├── mlgalaxy.js         # Multi-galaxy engine: constellation maps + warp
+│   ├── curriculum-ml.js    # ML Galaxy lessons (17)
+│   ├── curriculum-extra.js # Maths&Stats + RAG lessons
+│   ├── curriculum-extra2.js# Deep Learning + AI lessons
+│   ├── visuals.js          # Core demo registry (17 ML demos)
+│   ├── visuals-maths.js / -rag.js / -dl.js / -ai.js  # 39 more demos
 │   ├── style.css           # All styling
 │   ├── ai.js               # Backend API client
 │   └── data/

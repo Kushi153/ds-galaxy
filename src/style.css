@@ -710,27 +710,43 @@ body {
 }
 .qnav { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0 14px; }
 
-/* intro ML box */
-button.ml-enter {
+/* intro galaxy grid — 5 learning galaxies */
+.galaxy-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+  width: min(760px, 92vw);
+}
+.gal-box {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-top: 10px;
-  padding: 10px 18px;
+  gap: 3px;
+  padding: 12px 8px 10px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 209, 102, 0.45);
-  background: linear-gradient(135deg, rgba(255, 209, 102, 0.12), rgba(176, 108, 255, 0.14));
-  color: #ffe9b0;
+  border: 1px solid rgba(140, 160, 255, 0.28);
+  background: linear-gradient(160deg, rgba(108, 140, 255, 0.10), rgba(176, 108, 255, 0.10));
+  color: #e6ebff;
   cursor: pointer;
-  text-align: left;
+  text-align: center;
   transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
-button.ml-enter:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 209, 102, 0.85);
-  box-shadow: 0 6px 30px rgba(255, 209, 102, 0.18);
+.gal-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 209, 102, 0.75);
+  box-shadow: 0 8px 28px rgba(120, 140, 255, 0.22);
 }
-.ml-enter-icon { font-size: 22px; }
-.ml-enter-text { display: flex; flex-direction: column; gap: 1px; }
-.ml-enter-text b { font-size: 14px; letter-spacing: 0.02em; }
-.ml-enter-text small { font-size: 11px; color: rgba(230, 220, 190, 0.75); }
+.gal-icon { font-size: 22px; line-height: 1; }
+.gal-box b { font-size: 12.5px; letter-spacing: 0.02em; }
+.gal-box small { font-size: 10px; color: rgba(210, 220, 250, 0.65); }
+@media (max-width: 640px) {
+  .galaxy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* topbar home button */
+#home-btn {
+  flex: 0 0 auto;
+  letter-spacing: 0.02em;
+}
+#home-btn:hover { color: #ffd166; border-color: rgba(255, 209, 102, 0.6); }

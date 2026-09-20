@@ -3,7 +3,7 @@ import questionsData from "./data/questions.json";
 import { createScene, colorFor } from "./scene.js";
 import { getAnswer, raviChat, evaluateAnswer, health } from "./ai.js";
 import { mountVisual } from "./visuals.js";
-import { openMLGalaxy } from "./mlgalaxy.js";
+import { openGalaxy } from "./mlgalaxy.js";
 
 // ---------- DOM ----------
 const $ = (id) => document.getElementById(id);
@@ -105,7 +105,17 @@ $("enter-btn").addEventListener("click", () => {
   intro.classList.add("hidden");
   scene.setFocus(null);
 });
-$("ml-btn").addEventListener("click", () => openMLGalaxy());
+document.querySelectorAll("#galaxy-grid .gal-box").forEach((b) =>
+  b.addEventListener("click", () => openGalaxy(b.dataset.gal))
+);
+// Home button — return to the galaxy menu from anywhere
+$("home-btn").addEventListener("click", () => {
+  closePanel();
+  starPanel.classList.remove("open");
+  chatBox.classList.remove("open");
+  resultsBox.classList.remove("show");
+  intro.classList.remove("hidden");
+});
 
 // ---------- Shiva Eye cinematic (infinite zoom-through) ----------
 // Phases: reveal (eye appears) -> deeper (keeps zooming, scroll feeds it)

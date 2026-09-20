@@ -7,10 +7,10 @@
 
 const VIZ = {}; // id -> { title, note, build(canvas) -> {stop()} }
 
-const TAU = Math.PI * 2;
+export const TAU = Math.PI * 2;
 
-// ---------- tiny helpers ----------
-function grid(ctx, w, h, step = 40) {
+// ---------- tiny helpers (shared with visuals-maths/rag/dlai) ----------
+export function grid(ctx, w, h, step = 40) {
   ctx.strokeStyle = "rgba(120,140,255,0.07)";
   ctx.lineWidth = 1;
   for (let x = 0; x <= w; x += step) {
@@ -21,7 +21,7 @@ function grid(ctx, w, h, step = 40) {
   }
 }
 
-function points(n, w, h, seed = 1) {
+export function points(n, w, h, seed = 1) {
   // deterministic pseudo-random so every rerun looks the same
   let s = seed;
   const rnd = () => {
@@ -32,11 +32,11 @@ function points(n, w, h, seed = 1) {
 }
 
 // map data-coords (0..1) to canvas with margin
-function xy(v, size, m = 30) {
+export function xy(v, size, m = 30) {
   return m + v * (size - 2 * m);
 }
 
-function axes(ctx, w, h, m = 30) {
+export function axes(ctx, w, h, m = 30) {
   ctx.strokeStyle = "rgba(200,210,255,0.35)";
   ctx.lineWidth = 1.2;
   ctx.beginPath();
@@ -45,12 +45,13 @@ function axes(ctx, w, h, m = 30) {
   ctx.stroke();
 }
 
-function label(ctx, text, x, y, color = "rgba(220,228,255,0.75)", align = "left") {
+export function label(ctx, text, x, y, color = "rgba(220,228,255,0.75)", align = "left") {
   ctx.fillStyle = color;
   ctx.font = "11px Inter, sans-serif";
   ctx.textAlign = align;
   ctx.fillText(text, x, y);
 }
+
 
 // ============================================================
 // 1. GRADIENT DESCENT — ball rolls down a loss curve
@@ -751,6 +752,11 @@ VIZ["activation"] = {
 // ============================================================
 // public API
 // ============================================================
+// Register a demo from an external module (visuals-maths.js, visuals-rag.js, …)
+export function registerVisual(id, def) {
+  VIZ[id] = def;
+}
+
 export function visualFor(id) {
   return VIZ[id] || null;
 }
