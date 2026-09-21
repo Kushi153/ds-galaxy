@@ -128,14 +128,6 @@ Set `GEMINI_API_KEY` in the backend's environment and restart it — evaluation 
 
 ---
 
-## Data Sources
-
-- **Master Data Scientist Interview Question Bank** (PDF, 1,055 questions, 47 sections) — parsed via `scripts/parse-bank.mjs`
-- **[ai-engineering-interview-questions](https://github.com/amitshekhariitbhu/ai-engineering-interview-questions)** (490 questions, 14 sections) — parsed via `scripts/parse-repo.mjs`
-- HR Interview section written for this project (32 questions with full guidance)
-
----
-
 ## Contact
 
 **Raviteja Buddha**
