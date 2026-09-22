@@ -710,10 +710,10 @@ body {
 }
 .qnav { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 4px 0 14px; }
 
-/* intro galaxy grid — 5 learning galaxies */
+/* intro galaxy grid — 6 boxes: 5 learning galaxies + trainer */
 .galaxy-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   margin-top: 14px;
   width: min(760px, 92vw);
@@ -740,6 +740,10 @@ body {
 .gal-icon { font-size: 22px; line-height: 1; }
 .gal-box b { font-size: 12.5px; letter-spacing: 0.02em; }
 .gal-box small { font-size: 10px; color: rgba(210, 220, 250, 0.65); }
+.gal-trainer {
+  border-color: rgba(255, 209, 102, 0.4);
+  background: linear-gradient(160deg, rgba(255, 209, 102, 0.12), rgba(255, 107, 139, 0.10));
+}
 @media (max-width: 640px) {
   .galaxy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

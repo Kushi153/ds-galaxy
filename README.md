@@ -13,8 +13,8 @@ An interactive **3D educational platform** for Data Science and AI Engineering i
 
 ## Features
 
-### Six galaxies, one universe
-The intro screen is a **galaxy menu**: the interview-prep universe (DS Galaxy) plus **five learning galaxies**, each a full constellation map of animated lessons. Warp through hyperspace into any of them — and a **⌂ Home** button in the top bar always brings you back to the menu.
+### Six galaxies + the Trainer, one universe
+The intro screen is a **galaxy menu**: the interview-prep universe (DS Galaxy), **five learning galaxies**, each a full constellation map of animated lessons, and the **🎯 Interview Trainer**. Warp through hyperspace into any galaxy — and a **⌂ Home** button in the top bar always brings you back to the menu.
 
 | Galaxy | Lessons | What it teaches (every idea = live animation) |
 |---|---|---|
@@ -27,6 +27,19 @@ The intro screen is a **galaxy menu**: the interview-prep universe (DS Galaxy) p
 - Every lesson pairs a **live animated demo** with a plain-words explanation, key points, and a ready-to-use **interview one-liner**
 - **Progress is saved per galaxy**: finished lessons light up gold on the constellation map (stored locally)
 - **Back buttons everywhere**: lesson → all lessons → back to DS Galaxy → ⌂ Home to the galaxy menu; Escape works too
+
+### 🎯 Interview Trainer (`/trainer.html`)
+A complete **offline mock-interview simulator** embedded in the site — click the golden **Interview Trainer** box on the intro screen (or open `/trainer.html` directly). Fully self-contained: no backend, no keys, no internet. Seven modes:
+
+| Mode | What it does |
+|---|---|
+| 🎬 **Full Mock** | 2 timed coding problems → 6 interview questions → 10 rapid-fire, then a full adaptive report |
+| 💻 **Coding Round** | Timed Python problems with skeleton, hints, model solution & complexity check |
+| 🎙️ **Interview Round** | Speak first, then type — keyword feedback vs expected core ideas, follow-up drills |
+| ⚡ **Rapid Fire** | 10 questions × 25s, honest self-rating |
+| 📚 **Topic Practice** | Endless drill on Python / SQL / Statistics / ML / DL / LLMs & RAG / HR |
+| 🧠 **Instant Coach** | Any question → model answer + likely interviewer follow-ups; 🎤 dictation supported |
+| ⏱️ **Copilot Drill** | Timed delivery rounds: think, answer aloud, compare with the model answer |
 
 ### The Galaxy (question bank)
 - **1,577 questions across 62 topics** — Python, SQL, Statistics, Machine Learning, Deep Learning, Transformers, LLMs, RAG, AI Agents, MLOps, HR and more
@@ -122,7 +135,9 @@ Set `GEMINI_API_KEY` in the backend's environment and restart it — evaluation 
 │   ├── kb-fill.json / kb-fill2.json
 │   └── kb-hr.json          # 16 HR/behavioral frameworks
 ├── scripts/                # Data parsers (PDF → questions.json, repo merge)
-├── public/shiva-eye.webp   # The Eye
+├── public/
+│   ├── shiva-eye.webp      # The Eye
+│   └── trainer.html        # 🎯 Interview Trainer (offline mock-interview app)
 └── .freebuff/run.md        # Exact dev-server startup recipe
 ```
 

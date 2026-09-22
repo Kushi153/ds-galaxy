@@ -105,9 +105,13 @@ $("enter-btn").addEventListener("click", () => {
   intro.classList.add("hidden");
   scene.setFocus(null);
 });
-document.querySelectorAll("#galaxy-grid .gal-box").forEach((b) =>
+document.querySelectorAll("#galaxy-grid .gal-box[data-gal]").forEach((b) =>
   b.addEventListener("click", () => openGalaxy(b.dataset.gal))
 );
+// Interview Trainer — standalone offline app served from /trainer.html
+$("trainer-btn").addEventListener("click", () => {
+  window.location.href = "trainer.html";
+});
 // Home button — return to the galaxy menu from anywhere
 $("home-btn").addEventListener("click", () => {
   closePanel();
