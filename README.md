@@ -153,6 +153,6 @@ Set `GEMINI_API_KEY` in the backend's environment and restart it — evaluation 
 - GitHub: [Kushi153](https://github.com/Kushi153)
 
 ---
-site on live 👇👇
-https://ds-galaxy-1.onrender.com
+site on live 🫵
+https://ds-galaxy-1.onrender.com 🫵
 ---
