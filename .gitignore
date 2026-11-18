@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.venv/
+vite.log
+*.log
+*.log.err
+.freebuff/
+
+# source materials — not redistributable
+*.pdf
+questionbank.txt
+questionbank-raw.txt
+ai-repo-raw.md
+
+# original asset copies (served copies live in public/)
+/loard_shiva_eye.webp
+__pycache__/

@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ravi Interview Trainer</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a33;--panel2:#0e1428;--line:#223059;--text:#e8edf7;--dim:#8b96b5;--accent:#4f8cff;--good:#2ecc71;--warn:#f39c12;--bad:#e74c3c}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;min-height:100vh}
+.wrap{max-width:920px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:1.5rem;margin-bottom:4px}
+.sub{color:var(--dim);font-size:.95rem;margin-bottom:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px}
+.card h2{font-size:1.15rem;margin-bottom:10px}
+.card p{color:var(--dim);font-size:.92rem;margin-bottom:8px}
+.btn{background:var(--accent);border:none;color:#fff;padding:10px 18px;border-radius:8px;font-size:.95rem;cursor:pointer;font-weight:600}
+.btn:hover{filter:brightness(1.12)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+.btn.small{padding:6px 12px;font-size:.85rem}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--dim)}
+.btn.good{background:var(--good)}
+.btn.warn{background:var(--warn)}
+.btn.bad{background:var(--bad)}
+.mode-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.mode-card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;transition:border-color .15s,transform .15s}
+.mode-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.mode-card h3{font-size:1rem;margin-bottom:6px}
+.mode-card p{font-size:.85rem;margin:0;color:var(--dim)}
+select,textarea,input{width:100%;background:var(--panel2);border:1px solid var(--line);color:var(--text);padding:10px;border-radius:8px;font-size:.95rem;font-family:inherit}
+textarea{resize:vertical;min-height:140px}
+textarea:focus,select:focus,input:focus{outline:none;border-color:var(--accent)}
+label{font-size:.85rem;color:var(--dim);display:block;margin-bottom:6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.hidden{display:none !important}
+.tag{display:inline-block;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:.78rem;color:var(--dim)}
+.tag.ok{border-color:var(--good);color:var(--good)}
+.tag.warn{border-color:var(--warn);color:var(--warn)}
+.tag.bad{border-color:var(--bad);color:var(--bad)}
+.tag.accent{border-color:var(--accent);color:var(--accent)}
+.timer{font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums}
+.timer.low{color:var(--bad)}
+.progress{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-bottom:14px}
+.progress-bar{height:100%;background:var(--accent);width:0%;transition:width .3s}
+.qtext{font-size:1.08rem;line-height:1.5;margin-bottom:12px}
+.topic-chip{font-size:.78rem;color:var(--accent);margin-bottom:8px;letter-spacing:.05em;text-transform:uppercase}
+.meta{color:var(--dim);font-size:.88rem;margin-top:10px}
+.score{font-size:2.2rem;font-weight:800}
+.score.good{color:var(--good)}.score.warn{color:var(--warn)}.score.bad{color:var(--bad)}
+.report-item{border-left:3px solid var(--line);padding:10px 14px;margin-bottom:12px;background:var(--panel2);border-radius:0 8px 8px 0}
+.report-item.good{border-color:var(--good)}.report-item.warn{border-color:var(--warn)}.report-item.bad{border-color:var(--bad)}
+.report-item h4{font-size:.95rem;margin-bottom:4px}
+.report-item p{font-size:.87rem;margin:3px 0;color:var(--dim)}
+.code-block{background:#0a0f1e;border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto;white-space:pre;font-family:Consolas,Menlo,monospace;font-size:.85rem;line-height:1.55;margin:10px 0}
+textarea.coding{font-family:Consolas,Menlo,monospace;font-size:.9rem;line-height:1.5}
+.hint-box{background:rgba(79,140,255,.08);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:.9rem;margin:10px 0}
+.kw{display:inline-block;background:rgba(46,204,113,.12);border:1px solid var(--good);border-radius:6px;padding:2px 8px;font-size:.8rem;margin:3px 4px 0 0;color:var(--good)}
+.kw.miss{background:rgba(231,76,60,.1);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.chip-btn{background:var(--panel2);border:1px solid var(--accent);color:var(--accent);border-radius:999px;padding:4px 12px;font-size:.82rem;cursor:pointer;margin:4px 6px 0 0}
+.chip-btn:hover{filter:brightness(1.25)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:var(--panel2);border:none;color:var(--dim);padding:7px 14px;cursor:pointer;font-size:.85rem}
+.seg button.on{background:var(--accent);color:#fff;font-weight:600}
+.verdict{font-size:1.1rem;font-weight:700;margin:10px 0 4px}
+table.breakdown{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:10px}
+table.breakdown th,table.breakdown td{border:1px solid var(--line);padding:7px 10px;text-align:left}
+table.breakdown th{color:var(--dim);font-weight:600}
+.self-check{margin:12px 0;padding:12px;background:var(--panel2);border:1px dashed var(--line);border-radius:8px}
+.self-check label{margin-bottom:4px}
+@media(max-width:600px){.timer{font-size:1.3rem}.score{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="row between" style="margin-bottom:16px">
+    <div>
+      <h1>🎯 Ravi Interview Trainer</h1>
+      <p class="sub" id="subTitle">Coding, spoken interview, rapid fire, instant answer coaching, timed drills. Offline, one file, no keys.</p>
+    </div>
+    <div class="row">
+      <a class="btn ghost small" href="/" style="text-decoration:none">← Back to DS Galaxy</a>
+      <button class="btn ghost small hidden" id="homeBtn">⌂ Home</button>
+    </div>
+  </header>
+
+  <!-- ============ HOME ============ -->
+  <section id="home">
+    <div id="lastSession" class="card hidden"></div>
+    <div class="card">
+      <h2>Pick a mode</h2>
+      <p>Everything runs locally in this single file. Close it anytime — your last report is saved in the browser.</p>
+      <div class="mode-grid">
+        <div class="mode-card" data-mode="mock">
+          <h3>🎬 Full Mock</h3><p>Coding (2 problems) → interview (6 questions) → rapid fire (10), then a full report.</p>
+        </div>
+        <div class="mode-card" data-mode="coding">
+          <h3>💻 Coding Round</h3><p>Timer, hints, model solution, complexity self-check.</p>
+        </div>
+        <div class="mode-card" data-mode="interview">
+          <h3>🎙️ Interview Round</h3><p>Concept + behavioral questions. Speak your answer aloud, then type the summary — keyword feedback.</p>
+        </div>
+        <div class="mode-card" data-mode="rapid">
+          <h3>⚡ Rapid Fire</h3><p>Quick questions, 25 s each. Self-rate: got it / partly / missed.</p>
+        </div>
+        <div class="mode-card" data-mode="practice">
+          <h3>📚 Topic Practice</h3><p>Endless drill on one topic with instant keyword feedback.</p>
+        </div>
+        <div class="mode-card" data-mode="coach">
+          <h3>🧠 Instant Coach</h3><p>Fire any question — type, paste or dictate. Get a direct model answer plus likely follow-ups, instantly.</p>
+        </div>
+        <div class="mode-card" data-mode="drill">
+          <h3>⏱️ Copilot Drill</h3><p>Think-time rounds: answer aloud under the clock, then compare with the model answer and follow-ups.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SETUP ============ -->
+  <section id="setup" class="hidden">
+    <div class="card">
+      <h2 id="setupTitle">Setup</h2>
+      <p id="setupDesc"></p>
+      <div id="topicWrap" style="margin:12px 0">
+        <label for="topicSelect">Topic</label>
+        <select id="topicSelect"></select>
+      </div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="setupStart">Start</button>
+        <button class="btn ghost" id="setupBack">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CODING ============ -->
+  <section id="coding" class="hidden">
+    <div class="progress"><div class="progress-bar" id="codingProgress"></div></div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <div>
+          <div class="topic-chip" id="codingTopic"></div>
+          <h2 id="codingTitle"></h2>
+        </div>
+        <div class="row">
+          <span class="tag" id="codingDifficulty"></span>
+          <span class="tag" id="codingCounter"></span>
+          <span class="timer" id="codingTimer">00:00</span>
+        </div>
+      </div>
+      <div class="qtext" id="codingStatement"></div>
+      <div class="code-block" id="codingSkeleton"></div>
+      <div class="row">
+        <button class="btn secondary small" id="codingHintBtn">💡 Hint 1 of 3</button>
+      </div>
+      <div id="codingHints"></div>
+      <label style="margin-top:12px">Your solution (Python)</label>
+      <textarea id="codingAnswer" class="coding" rows="10"></textarea>
+      <div class="self-check hidden" id="codingSelfCheck">
+        <label>Before submitting — does your approach hit the optimal complexity?</label>
+        <select id="codingComplexity">
+          <option value="">Select complexity of your solution...</option>
+        </select>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="codingSubmit">Submit &amp; Next</button>
+        <button class="btn secondary small" id="codingGiveUp">Give up &amp; see solution</button>
+      </div>
+      <div id="codingFeedback" class="meta"></div>
+      <div id="codingSolution" class="code-block hidden"></div>
+    </div>
+  </section>
+
+  <!-- ============ INTERVIEW ============ -->
+  <section id="interview" class="hidden">
+    <div class="progress"><div class="progress-bar" id="interviewProgress"></div></div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <div>
+          <div class="topic-chip" id="interviewTopic"></div>
+          <h2 id="interviewKind">Interview Round</h2>
+        </div>
+        <div class="row">
+          <span class="tag" id="interviewCounter"></span>
+          <span class="timer" id="interviewTimer">00:45</span>
+        </div>
+      </div>
+      <p class="meta" style="margin:0 0 8px" id="interviewTip">Say your answer out loud first, as if speaking to the interviewer. Then type the key points here.</p>
+      <div class="qtext" id="interviewQuestion"></div>
+      <textarea id="interviewAnswer" rows="6" placeholder="Type the key points of your spoken answer..."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="interviewSubmit">Submit &amp; Next</button>
+        <button class="btn secondary small" id="interviewSkip">Skip</button>
+      </div>
+      <div id="interviewFeedback" class="meta"></div>
+    </div>
+  </section>
+
+  <!-- ============ RAPID ============ -->
+  <section id="rapid" class="hidden">
+    <div class="progress"><div class="progress-bar" id="rapidProgress"></div></div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <div>
+          <div class="topic-chip" id="rapidTopic"></div>
+          <h2>⚡ Rapid Fire</h2>
+        </div>
+        <div class="row">
+          <span class="tag" id="rapidCounter"></span>
+          <span class="timer" id="rapidTimer">25</span>
+        </div>
+      </div>
+      <div class="qtext" id="rapidQuestion"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn good" id="rapidGot">✓ Got it</button>
+        <button class="btn warn" id="rapidPartly">~ Partly</button>
+        <button class="btn bad" id="rapidMissed">✗ Missed</button>
+      </div>
+      <div class="meta">Answer out loud, then rate yourself honestly. Timer auto-marks a miss.</div>
+      <div id="rapidFlash" class="hint-box hidden"></div>
+    </div>
+  </section>
+
+  <!-- ============ PRACTICE ============ -->
+  <section id="practice" class="hidden">
+    <div class="progress"><div class="progress-bar" id="practiceProgress"></div></div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <div>
+          <div class="topic-chip" id="practiceTopic"></div>
+          <h2>📚 Topic Practice</h2>
+        </div>
+        <div class="row">
+          <span class="tag" id="practiceCounter"></span>
+          <span class="timer" id="practiceTimer">01:30</span>
+        </div>
+      </div>
+      <div class="qtext" id="practiceQuestion"></div>
+      <textarea id="practiceAnswer" rows="5" placeholder="Type your answer..."></textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="practiceSubmit">Check &amp; Next</button>
+        <button class="btn secondary small" id="practiceReveal">Reveal answer</button>
+        <button class="btn ghost small" id="practiceEnd">End session</button>
+      </div>
+      <div id="practiceFeedback" class="meta"></div>
+    </div>
+  </section>
+
+  <!-- ============ COACH ============ -->
+  <section id="coach" class="hidden">
+    <div class="card">
+      <h2>🧠 Instant Answer Coach</h2>
+      <p>Fire any interview question — type it, paste it, or dictate it. You get a direct, structured model answer plus the follow-ups an interviewer would most likely ask next. Then practice saying the answer out loud until it is natural. This is a practice-room tool — keep it closed during real interviews.</p>
+      <textarea id="coachInput" rows="3" placeholder="Paste or type any interview question, e.g. What is the difference between a list and a tuple?"></textarea>
+      <div class="row" style="margin-top:10px">
+        <span class="seg" id="coachLevelSeg">
+          <button type="button" data-level="entry" class="on">Entry</button>
+          <button type="button" data-level="senior">Senior</button>
+        </span>
+        <button class="btn" id="coachGo">Answer it ➜</button>
+        <button class="btn secondary small" id="coachMic" hidden>🎤 Speak</button>
+        <button class="btn ghost small" id="coachClear">Clear</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <span class="meta">Try one:</span>
+        <button class="chip-btn" data-q="What is the GIL and when do threads actually help?">GIL</button>
+        <button class="chip-btn" data-q="Explain the RAG pipeline end to end.">RAG pipeline</button>
+        <button class="chip-btn" data-q="Tell me about a time you failed.">Failure story</button>
+        <button class="chip-btn" data-q="How do you handle imbalanced classes?">Imbalanced data</button>
+      </div>
+      <div id="coachOut" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <!-- ============ DRILL ============ -->
+  <section id="drill" class="hidden">
+    <div class="progress"><div class="progress-bar" id="drillProgress"></div></div>
+    <div class="card">
+      <div class="row between" style="margin-bottom:10px">
+        <div>
+          <div class="topic-chip" id="drillTopic"></div>
+          <h2>⏱️ Copilot Drill</h2>
+        </div>
+        <div class="row">
+          <select id="drillThink" style="width:auto">
+            <option value="20">Think: 20s</option>
+            <option value="30" selected>Think: 30s</option>
+            <option value="45">Think: 45s</option>
+            <option value="60">Think: 60s</option>
+          </select>
+          <span class="tag" id="drillCounter"></span>
+          <span class="timer" id="drillTimer">00:30</span>
+        </div>
+      </div>
+      <p class="meta" style="margin:0 0 8px">Answer out loud, as if the interviewer is listening. When the think timer ends — or the moment you finish — reveal the model answer, compare your delivery, then rate yourself honestly.</p>
+      <div class="qtext" id="drillQuestion"></div>
+      <div class="row" style="margin-top:14px">
+        <button class="btn" id="drillDone">✓ I answered aloud — show model answer</button>
+      </div>
+      <div id="drillFeedback" class="hidden" style="margin-top:12px">
+        <div class="hint-box" id="drillModel"></div>
+        <div style="margin-top:10px"><strong style="font-size:.9rem">⚡ Likely follow-ups:</strong></div>
+        <div id="drillFollowups"></div>
+        <div class="row" style="margin-top:12px">
+          <button class="btn good" id="drillGot">✓ Delivered it well</button>
+          <button class="btn warn" id="drillPartly">~ Partly</button>
+          <button class="btn bad" id="drillMissed">✗ Missed it</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REPORT ============ -->
+  <section id="report" class="hidden">
+    <div class="card">
+      <h2>📊 Session Report</h2>
+      <div class="row between" style="margin:10px 0 4px">
+        <div>
+          <div class="score" id="reportScore">—</div>
+          <div class="meta" id="reportVerdict"></div>
+        </div>
+        <div class="meta" id="reportCounts"></div>
+      </div>
+      <div id="reportBreakdown"></div>
+      <h2 style="margin-top:18px">Question by question</h2>
+      <div id="reportItems"></div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn" id="reportAgain">New session</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+var byId = function(id){ return document.getElementById(id); };
+
+/* ================= DATA ================= */
+
+var CODING_PROBLEMS = [
+  {
+    id: "two-sum",
+    title: "Two Sum",
+    topic: "Arrays & Hashing",
+    difficulty: "Easy",
+    timeMin: 12,
+    statement: "Given an array of integers nums and an integer target, return the indices of the two numbers that add up to the target. Exactly one solution exists and you may not reuse the same element twice.",
+    skeleton: "def two_sum(nums, target):\n    # Return [i, j] such that nums[i] + nums[j] == target, i != j\n    pass",
+    hints: [
+      "Brute force checks every pair in O(n squared). A hash map gets you O(n).",
+      "Scan left to right, storing each number and its index in a dict as you go.",
+      "For each new num, check whether target - num is already in the dict BEFORE inserting num."
+    ],
+    optimal: "O(n) time, O(n) space",
+    options: ["O(n) time, O(n) space", "O(n log n) time, O(1) space", "O(n squared) time, O(1) space"],
+    solution:
+"def two_sum(nums, target):\n"+
+"    seen = {}\n"+
+"    for i, n in enumerate(nums):\n"+
+"        if target - n in seen:\n"+
+"            return [seen[target - n], i]\n"+
+"        seen[n] = i\n"+
+"    return []",
+    keywords: ["dict", "seen", "target", "enumerate"]
+  },
+  {
+    id: "reverse-string",
+    title: "Reverse String in Place",
+    topic: "Two Pointers",
+    difficulty: "Easy",
+    timeMin: 10,
+    statement: "Reverse a list of characters in place using two pointers and O(1) extra space. Return the same list.",
+    skeleton: "def reverse_string(s):\n    # Two pointers, swap toward the middle, O(1) extra space\n    pass",
+    hints: [
+      "Put one pointer at index 0 and one at the last index.",
+      "Swap the two elements, then move left forward and right backward.",
+      "Stop when the pointers meet or cross: loop while left < right."
+    ],
+    optimal: "O(n) time, O(1) extra space",
+    options: ["O(n) time, O(1) extra space", "O(n) time, O(n) extra space", "O(n log n) time, O(1) extra space"],
+    solution:
+"def reverse_string(s):\n"+
+"    left, right = 0, len(s) - 1\n"+
+"    while left < right:\n"+
+"        s[left], s[right] = s[right], s[left]\n"+
+"        left += 1\n"+
+"        right -= 1\n"+
+"    return s",
+    keywords: ["left", "right", "swap", "while"]
+  },
+  {
+    id: "valid-parentheses",
+    title: "Valid Parentheses",
+    topic: "Stacks",
+    difficulty: "Easy",
+    timeMin: 12,
+    statement: "Given a string containing only the characters ( ) [ ] { }, decide if it is valid: every opener is closed by the same type in the correct order.",
+    skeleton: "def is_valid(s):\n    # Push openers on a stack, pop and compare on each closer\n    pass",
+    hints: [
+      "Use a stack: push every opener.",
+      "On a closer, the stack must be non-empty and the pop must be the matching opener.",
+      "The string is valid only if the stack is empty at the end."
+    ],
+    optimal: "O(n) time, O(n) space",
+    options: ["O(n) time, O(n) space", "O(n) time, O(1) space", "O(n squared) time, O(n) space"],
+    solution:
+"def is_valid(s):\n"+
+"    pair = {')': '(', ']': '[', '}': '{'}\n"+
+"    stack = []\n"+
+"    for ch in s:\n"+
+"        if ch in '([{':\n"+
+"            stack.append(ch)\n"+
+"        elif not stack or stack.pop() != pair[ch]:\n"+
+"            return False\n"+
+"    return not stack",
+    keywords: ["stack", "pair", "pop", "empty"]
+  },
+  {
+    id: "group-anagrams",
+    title: "Group Anagrams",
+    topic: "Strings & Hashing",
+    difficulty: "Medium",
+    timeMin: 15,
+    statement: "Group the anagrams together from a list of words. Any order of groups is fine. Example: eat tea tan ate nat bat gives [eat tea ate] [tan nat] [bat].",
+    skeleton: "def group_anagrams(strs):\n    # Map a canonical key (sorted letters) to the list of words\n    pass",
+    hints: [
+      "Anagrams share the same multiset of letters, so a canonical key works.",
+      "Sorting the letters of a word gives a canonical key: sorted(word) joined into a string.",
+      "Use a dict of key to list, append each word, return the values."
+    ],
+    optimal: "O(n k log k) time with sorted keys, O(n k) space",
+    options: ["O(n k log k) time with sorted keys, O(n k) space", "O(n squared) time", "O(n) time with counting sort keys"],
+    solution:
+"from collections import defaultdict\n"+
+"\n"+
+"def group_anagrams(strs):\n"+
+"    groups = defaultdict(list)\n"+
+"    for w in strs:\n"+
+"        groups[''.join(sorted(w))].append(w)\n"+
+"    return list(groups.values())",
+    keywords: ["sorted", "defaultdict", "join", "values"]
+  },
+  {
+    id: "merge-intervals",
+    title: "Merge Intervals",
+    topic: "Sorting & Sweep",
+    difficulty: "Medium",
+    timeMin: 15,
+    statement: "Given a list of [start, end] intervals, merge all overlapping intervals and return them sorted by start.",
+    skeleton: "def merge_intervals(intervals):\n    # Sort by start, then sweep and merge overlaps\n    pass",
+    hints: [
+      "Sort the intervals by start value first.",
+      "Keep the last merged interval; if the current start is <= its end, they overlap.",
+      "On overlap extend the end with max(end, current end); otherwise start a new interval."
+    ],
+    optimal: "O(n log n) time for the sort, O(n) output",
+    options: ["O(n log n) time for the sort, O(n) output", "O(n) time with no sort", "O(n squared) time"],
+    solution:
+"def merge_intervals(intervals):\n"+
+"    intervals.sort(key=lambda x: x[0])\n"+
+"    merged = []\n"+
+"    for start, end in intervals:\n"+
+"        if merged and start <= merged[-1][1]:\n"+
+"            merged[-1][1] = max(merged[-1][1], end)\n"+
+"        else:\n"+
+"            merged.append([start, end])\n"+
+"    return merged",
+    keywords: ["sort", "merged", "max", "overlap"]
+  }
+];
+
+var BANK = {
+  "Python": [
+    { q: "What are Python decorators?", k: ["function", "wrap", "extend", "behavior"], a: "A decorator takes a function and returns a wrapped version that adds behavior without modifying the original, applied with the @name syntax. Common uses: logging, timing, caching, authentication." },
+    { q: "What are generators and why use them?", k: ["yield", "lazy", "memory", "iterator"], a: "A generator is a function with yield: it produces values one at a time, lazily, so the whole sequence never sits in memory. Ideal for large datasets, streams and infinite sequences." },
+    { q: "Difference between list, tuple, set and dict?", k: ["mutable", "ordered", "duplicate", "key"], a: "List: mutable, ordered, allows duplicates. Tuple: immutable, ordered, hashable. Set: mutable, unordered, deduplicates. Dict: mutable key-to-value map, insertion-ordered since 3.7." },
+    { q: "Shallow copy vs deep copy?", k: ["nested", "reference", "copy", "independent"], a: "A shallow copy creates a new outer container but shares nested objects, so inner mutations leak through. copy.deepcopy recursively copies everything, making fully independent structures." },
+    { q: "What are *args and **kwargs?", k: ["positional", "keyword", "tuple", "dict"], a: "*args collects extra positional arguments into a tuple, **kwargs collects extra keyword arguments into a dict. At call sites, * and ** unpack iterables and dicts into arguments." },
+    { q: "What is the GIL? When do threads help vs multiprocessing?", k: ["bytecode", "one thread", "cpu", "io"], a: "The GIL lets only one thread execute Python bytecode at a time, so CPU-bound work does not speed up with threads; use multiprocessing. I/O-bound work still benefits because the GIL is released during waits." },
+    { q: "Explain try / except / else / finally and raise.", k: ["try", "except", "finally", "raise"], a: "try holds risky code, except catches specific exceptions, else runs when no exception occurred, finally always runs for cleanup, and raise throws deliberately. raise X from err chains exceptions." },
+    { q: "What does the with statement do?", k: ["context", "enter", "exit", "cleanup"], a: "with uses a context manager: __enter__ runs on entry and __exit__ on exit, even during exceptions, so files, locks and connections are released reliably." },
+    { q: "What is __name__ == '__main__' for?", k: ["imported", "direct", "guard", "script"], a: "__name__ equals '__main__' when a file runs directly and equals the module name when imported. The guard keeps import-time side effects out of importers." },
+    { q: "How does list slicing work, including negatives?", k: ["start", "stop", "step", "reverse"], a: "s[start:stop:step] clamps out-of-range bounds instead of raising, stop is exclusive, negative indices count from the end, s[::-1] reverses and s[::2] takes every second element." },
+    { q: "is vs == in Python?", k: ["identity", "equality", "memory", "none"], a: "== compares values via __eq__, is compares identity, meaning the same object in memory. Use is only for None sentinels, never for value comparison." },
+    { q: "What are Counter and defaultdict used for?", k: ["count", "default", "collections", "frequency"], a: "Counter counts hashable items and gives most_common. defaultdict supplies a factory for missing keys, so groups[k].append(x) works without initializing k first." }
+  ],
+  "SQL": [
+    { q: "Difference between WHERE and HAVING?", k: ["filter", "group", "aggregate", "row"], a: "WHERE filters rows before grouping and cannot use aggregates. HAVING filters groups after GROUP BY and can reference aggregate functions like COUNT or SUM." },
+    { q: "INNER JOIN vs LEFT JOIN?", k: ["match", "null", "rows", "outer"], a: "INNER JOIN returns only rows with matches in both tables. LEFT JOIN returns all rows from the left table plus matched right rows, with NULLs where there is no match." },
+    { q: "How do you find the second highest salary?", k: ["offset", "limit", "order", "dense_rank"], a: "Use ORDER BY salary DESC with LIMIT 1 OFFSET 1, or a subquery with MAX(salary) below the max, or DENSE_RANK() OVER (ORDER BY salary DESC) and filter rank 2, which also handles ties." },
+    { q: "What are window functions?", k: ["over", "partition", "rank", "aggregate"], a: "Window functions like ROW_NUMBER, RANK, SUM OVER compute across a set of rows defined by OVER (PARTITION BY ... ORDER BY ...) without collapsing rows the way GROUP BY does." },
+    { q: "DELETE vs TRUNCATE vs DROP?", k: ["rows", "table", "rollback", "schema"], a: "DELETE removes chosen rows, is logged and can be rolled back. TRUNCATE removes all rows fast, usually without row-level logging. DROP removes the whole table object including its schema." },
+    { q: "What is a correlated subquery?", k: ["outer", "row", "reference", "nested"], a: "A correlated subquery references columns of the outer query and is conceptually re-evaluated per outer row, for example finding employees earning above their own department average." },
+    { q: "Explain normalization to 3NF.", k: ["dependency", "partial", "transitive", "atomic"], a: "1NF: atomic values, no repeating groups. 2NF: no partial dependency of a column on part of a composite key. 3NF: no transitive dependency of non-key columns on other non-key columns. It reduces redundancy and update anomalies." },
+    { q: "What is the difference between UNION and UNION ALL?", k: ["duplicate", "distinct", "sort", "faster"], a: "UNION removes duplicate rows, which costs a sort or hash. UNION ALL keeps duplicates and is faster when duplicates are impossible or acceptable." },
+    { q: "How would you handle NULLs in aggregation?", k: ["coalesce", "ignore", "count", "avg"], a: "Aggregate functions ignore NULLs, so COUNT(col) skips them while COUNT(*) counts rows. Use COALESCE or IFNULL to substitute defaults, and remember NULL comparisons need IS NULL." },
+    { q: "Write a query to get duplicate emails.", k: ["group", "having", "count", "greater"], a: "SELECT email FROM users GROUP BY email HAVING COUNT(*) > 1. GROUP BY collapses per email, HAVING keeps only groups with more than one row." },
+    { q: "What is an index and when does it hurt?", k: ["btree", "lookup", "write", "storage"], a: "An index is a data structure, usually a B-tree, that speeds reads on its columns. It slows writes, consumes storage, and low-selectivity or leading-wildcard queries may not use it." },
+    { q: "Explain RANK vs DENSE_RANK vs ROW_NUMBER.", k: ["tie", "gap", "sequence", "order"], a: "ROW_NUMBER gives a unique increasing number ignoring ties. RANK gives ties the same rank and skips subsequent numbers. DENSE_RANK gives ties the same rank with no gaps." }
+  ],
+  "Statistics": [
+    { q: "Mean vs median: when does each win?", k: ["outlier", "skew", "central", "symmetric"], a: "The mean uses every value but is dragged by outliers and skew. The median is robust to outliers. Use the median for skewed data like income, the mean for roughly symmetric data." },
+    { q: "What is variance and standard deviation?", k: ["spread", "square", "root", "units"], a: "Variance is the average squared deviation from the mean; standard deviation is its square root, bringing spread back into the original units so it is interpretable." },
+    { q: "State the Central Limit Theorem.", k: ["sample", "distribution", "normal", "large"], a: "For a large enough sample size, the sampling distribution of the mean approaches a normal distribution regardless of the population shape, with mean near the population mean and standard error sigma over root n." },
+    { q: "What is a p-value?", k: ["null", "probability", "extreme", "significant"], a: "The p-value is the probability of observing data at least as extreme as what you got, assuming the null hypothesis is true. A small p-value is evidence against the null, not proof the null is false." },
+    { q: "Explain a confidence interval.", k: ["estimate", "range", "95", "parameter"], a: "A 95 percent confidence interval is a range built so that, over repeated sampling, 95 percent of such ranges would contain the true parameter. It quantifies estimation uncertainty, not the probability a single interval is right." },
+    { q: "State Bayes' theorem and one use case.", k: ["prior", "likelihood", "posterior", "evidence"], a: "P(A|B) = P(B|A) P(A) / P(B): the posterior is the likelihood times the prior over the evidence. Use it to update spam probability given a word, or disease probability given a test result." },
+    { q: "Correlation vs causation, with an example.", k: ["confound", "third", "coincide", "experiment"], a: "Correlation measures co-movement; causation requires that changing one changes the other. A confounder like temperature can drive both ice-cream sales and drownings. Only controlled experiments or careful designs establish causation." },
+    { q: "What is Type I vs Type II error?", k: ["false positive", "false negative", "alpha", "beta"], a: "Type I is rejecting a true null, a false positive, controlled by alpha. Type II is failing to reject a false null, a false negative, related to beta and statistical power." },
+    { q: "Explain the law of large numbers.", k: ["average", "converge", "sample", "expectation"], a: "As the number of independent, identically distributed samples grows, the sample average converges to the expected value. It is the reason large A/B tests give stable estimates." },
+    { q: "What does AUC-ROC measure?", k: ["curve", "threshold", "rank", "classifier"], a: "AUC-ROC is the area under the true-positive-rate versus false-positive-rate curve across thresholds. It is the probability that a random positive scores higher than a random negative, so 0.5 is random and 1.0 is perfect." },
+    { q: "What is hypothesis testing in plain words?", k: ["null", "alternative", "evidence", "reject"], a: "Set up a null and an alternative, compute a test statistic from data, and decide whether the evidence is strong enough to reject the null at a chosen significance level, accounting for both error types." },
+    { q: "What is covariance vs correlation?", k: ["direction", "standardize", "unit", "linear"], a: "Covariance measures joint directional spread in raw units. Correlation standardizes covariance by both standard deviations, landing in [-1, 1], so it is scale-free and comparable." }
+  ],
+  "Machine Learning": [
+    { q: "Bias-variance tradeoff?", k: ["underfit", "overfit", "error", "complexity"], a: "Bias is error from over-simple models that miss patterns, underfitting. Variance is error from over-sensitive models that chase noise, overfitting. Total error is minimized at intermediate complexity, tuned via validation." },
+    { q: "How does linear regression work?", k: ["coefficients", "least squares", "line", "minimize"], a: "It fits y = w x + b by minimizing squared errors, typically via closed-form least squares or gradient descent. Assumptions include linearity, independent errors, constant variance and little multicollinearity." },
+    { q: "Logistic regression: why not linear for classification?", k: ["probability", "sigmoid", "logit", "threshold"], a: "Linear outputs unbounded values, not probabilities. Logistic passes the linear score through a sigmoid to squash outputs into (0,1) and maximizes log-likelihood, giving calibrated class probabilities." },
+    { q: "Explain gradient descent and learning rate.", k: ["gradient", "step", "minimize", "converge"], a: "Gradient descent updates parameters against the loss gradient: w -= lr * grad. Too large a learning rate overshoots or diverges; too small converges slowly. Variants: batch, stochastic, mini-batch, plus momentum and Adam." },
+    { q: "How does KNN work and what are its weaknesses?", k: ["distance", "neighbors", "k", "scale"], a: "KNN stores the training set and classifies a point by majority vote of its k nearest neighbors. It is simple but slow at predict time, sensitive to feature scaling, and degrades in high dimensions." },
+    { q: "Decision trees vs random forests?", k: ["ensemble", "bagging", "overfit", "vote"], a: "A single tree overfits easily. A random forest trains many trees on bootstrap samples with random feature subsets and averages them, reducing variance and improving generalization." },
+    { q: "What is SVM and what is the kernel trick?", k: ["margin", "hyperplane", "support", "kernel"], a: "SVM finds the hyperplane maximizing the margin between classes; support vectors are the boundary points that matter. Kernels like RBF implicitly map data to higher dimensions so non-linear boundaries become separable." },
+    { q: "Explain K-Means and how to choose k.", k: ["centroid", "cluster", "elbow", "silhouette"], a: "K-Means alternates assigning points to nearest centroid and recomputing centroids until stable. Pick k with the elbow method on inertia or a silhouette score; results depend on initialization, hence k-means++." },
+    { q: "How do you handle imbalanced classes?", k: ["resample", "weight", "smote", "metric"], a: "Options: resample with oversampling like SMOTE or undersampling, class weights in the loss, threshold tuning, and proper metrics like PR-AUC or F1 instead of raw accuracy." },
+    { q: "Why is accuracy a bad metric for imbalanced data?", k: ["precision", "recall", "f1", "minority"], a: "With 99 percent negatives, predicting everything negative scores 99 percent accuracy while catching zero positives. Precision, recall, F1 and PR-AUC reflect minority-class performance." },
+    { q: "What is regularization and L1 vs L2?", k: ["penalty", "lasso", "ridge", "shrink"], a: "Regularization adds a penalty on weights to curb overfitting. L1, lasso, shrinks some weights exactly to zero, giving sparsity and feature selection. L2, ridge, shrinks weights smoothly without eliminating them." },
+    { q: "How does cross-validation work and why use it?", k: ["fold", "validation", "estimate", "generalize"], a: "Split data into k folds, train on k-1, validate on the held-out fold, rotate, and average. It gives a more reliable generalization estimate than one fixed split and uses all data for both training and validation." }
+  ],
+  "Deep Learning": [
+    { q: "What is a perceptron and its limits?", k: ["weighted", "activation", "linear", "xor"], a: "A perceptron computes a weighted sum plus bias through a step activation. It can only draw linear boundaries, famously failing on XOR, which stacking layers and non-linear activations fix." },
+    { q: "Why do we need activation functions?", k: ["nonlinear", "linear", "stack", "relu"], a: "Without non-linear activations, stacked layers collapse into one linear map. ReLU, sigmoid and tanh inject non-linearity so networks can approximate complex functions." },
+    { q: "Explain backpropagation in one breath.", k: ["chain", "gradient", "backward", "update"], a: "Forward pass computes outputs and loss; backward pass applies the chain rule layer by layer to get gradients of loss with respect to every weight; the optimizer updates weights with those gradients." },
+    { q: "What problem does dropout solve?", k: ["overfit", "random", "regularize", "ensemble"], a: "Dropout randomly zeroes a fraction of neurons during training so no unit can over-rely on specific partners, acting like an implicit ensemble and reducing overfitting. At inference it is disabled." },
+    { q: "How does a CNN convolution layer work?", k: ["filter", "kernel", "feature", "sliding"], a: "Small learnable filters slide across the input computing dot products, producing feature maps that detect local patterns like edges. Pooling then downsamples, giving translation tolerance and fewer parameters than dense layers." },
+    { q: "Why do RNNs struggle with long sequences?", k: ["vanishing", "gradient", "memory", "lstm"], a: "Repeated multiplication of gradients through time steps makes them vanish or explode, so distant context fades. LSTMs and GRUs add gates that preserve gradients; transformers replace recurrence with attention." },
+    { q: "What does attention compute?", k: ["query", "key", "value", "weight"], a: "Each position computes a query, compares it against all keys to get similarity scores, softmaxes them into weights, and mixes the values with those weights. It gives every position direct access to every other, no recurrence needed." },
+    { q: "SGD vs Adam optimizer?", k: ["momentum", "adaptive", "learning rate", "converge"], a: "SGD updates with plain or momentum-boosted gradients and can generalize well but needs learning-rate tuning. Adam keeps per-parameter adaptive learning rates from first and second moment estimates, converging fast with little tuning." },
+    { q: "Batch normalization: what and why?", k: ["normalize", "layer", "stable", "internal"], a: "It normalizes layer inputs per mini-batch to zero mean and unit variance, then rescales with learnable parameters. This stabilizes and speeds training, allows higher learning rates, and adds mild regularization." },
+    { q: "What is transfer learning?", k: ["pretrained", "fine-tune", "frozen", "features"], a: "Start from a model pretrained on a large dataset, reuse its learned features, then either freeze early layers and train a new head, or fine-tune more layers on your smaller task. Saves data and compute." },
+    { q: "How do you combat overfitting in neural nets?", k: ["dropout", "augment", "regularize", "early"], a: "More data or augmentation, dropout, weight decay, early stopping on validation loss, smaller architectures, and batch norm. Monitor the train-validation gap to confirm." },
+    { q: "What loss for binary vs multi-class classification?", k: ["entropy", "cross", "softmax", "sigmoid"], a: "Binary: binary cross-entropy with a sigmoid output. Multi-class: categorical cross-entropy with softmax, or sparse categorical cross-entropy with integer labels." }
+  ],
+  "LLMs & RAG": [
+    { q: "What is a token?", k: ["subword", "vocab", "split", "embedding"], a: "LLMs process text as tokens, subword units from a fixed vocabulary produced by a tokenizer like BPE. Costs, context limits and latency are all measured in tokens." },
+    { q: "Explain next-token prediction.", k: ["probability", "context", "distribution", "sample"], a: "The model outputs a probability distribution over the vocabulary for the next token given the context. Sampling with temperature or greedy decoding picks the token, and generation repeats this step by step." },
+    { q: "What is temperature in sampling?", k: ["randomness", "distribution", "sharp", "flat"], a: "Temperature rescales logits before softmax: low values sharpen the distribution toward greedy determinism, high values flatten it, increasing randomness and creativity but risking incoherence." },
+    { q: "Explain the RAG pipeline end to end.", k: ["chunk", "embed", "retrieve", "generate"], a: "Chunk documents, embed chunks into vectors, store in a vector index, embed the user query, retrieve top-k similar chunks, assemble them into the prompt, and generate a grounded answer with citations." },
+    { q: "Why chunk documents and what size works?", k: ["context", "overlap", "split", "semantic"], a: "Chunks must fit embedding and context limits while staying semantically coherent. Typical sizes run a few hundred tokens with 10 to 20 percent overlap so ideas spanning boundaries are not lost." },
+    { q: "How does cosine similarity search work in RAG?", k: ["vector", "angle", "top", "embed"], a: "Query and chunk embeddings are vectors; cosine similarity measures the angle between them, and the index returns the top-k nearest chunks. ANN indexes like HNSW make this fast at scale." },
+    { q: "What is reranking in RAG?", k: ["cross-encoder", "top", "precision", "candidate"], a: "A first-stage retriever pulls cheap candidates; a heavier cross-encoder reranker scores query-chunk pairs jointly and reorders, raising the precision of what enters the prompt." },
+    { q: "How do you reduce hallucinations in an LLM app?", k: ["ground", "citation", "retrieval", "refuse"], a: "Ground answers in retrieved context, ask for citations, keep prompts explicit about answering only from provided sources, validate outputs, allow abstention, and evaluate with faithfulness metrics." },
+    { q: "RAG vs fine-tuning: which and when?", k: ["knowledge", "behavior", "fresh", "style"], a: "RAG injects fresh, citable knowledge at query time, best for changing facts and domain documents. Fine-tuning changes behavior, style and format on stable tasks. They combine: fine-tune the behavior, retrieve the facts." },
+    { q: "How do you evaluate an LLM or RAG system?", k: ["metric", "golden", "faithfulness", "human"], a: "Golden-set benchmarks, faithfulness and relevance metrics for generation, retrieval recall and precision, plus human review. Track regressions in CI with automated evals." },
+    { q: "What is a context window and why does it matter?", k: ["limit", "tokens", "truncate", "memory"], a: "The context window is the maximum tokens a model can attend to in one call, including prompt and output. Exceeding it forces truncation or summarization; retrieval decides what deserves the space." },
+    { q: "What are agents and tool use in LLM apps?", k: ["function", "loop", "action", "observe"], a: "An agent loops: the model decides an action like calling a search or calculator tool, the system executes it, results go back into context, and the model continues until it can answer. This extends LLMs beyond text prediction." }
+  ],
+  "HR / Behavioral": [
+    { q: "Tell me about yourself.", k: ["present", "past", "future", "role"], a: "Use Present-Past-Future: what you do now and a highlight, the relevant path that led here, and why this role is the right next step. Keep it 60 to 90 seconds, tailored to the job." },
+    { q: "Describe a challenging project and how you handled it.", k: ["situation", "task", "action", "result"], a: "STAR: set the Situation and your Task, detail the Actions you personally took including decisions and tradeoffs, close with measurable Results and one thing you learned." },
+    { q: "Tell me about a time you failed.", k: ["ownership", "learned", "changed", "honest"], a: "Pick a real failure, own it without blaming others, explain the root cause, and emphasize the concrete change you made afterward that produced a later win." },
+    { q: "Why do you want to work here?", k: ["research", "product", "values", "contribute"], a: "Show specific research: a product, problem or value that genuinely fits you, connect it to your skills, and state what you would contribute. Avoid generic praise." },
+    { q: "What is your greatest strength?", k: ["specific", "example", "relevant", "evidence"], a: "One strength relevant to the role, backed by a compact example with a result. Specific beats grand: a story about debugging under pressure beats calling yourself a hard worker." },
+    { q: "What is your greatest weakness?", k: ["real", "improving", "action", "aware"], a: "Name a genuine, non-fatal weakness, then show the concrete system you use to manage it and the progress made. Avoid disguised strengths like being a perfectionist." },
+    { q: "Where do you see yourself in five years?", k: ["growth", "direction", "role", "aligned"], a: "Show ambition aligned with the path this role offers: deeper expertise, ownership of bigger problems, mentoring. Tie growth to contributing here, not escaping." },
+    { q: "Why are you leaving your current job?", k: ["growth", "positive", "forward", "opportunity"], a: "Stay positive and forward-looking: seeking growth, scope or problems the new role offers. Never trash your employer; the interviewer hears how you will talk about them." },
+    { q: "Tell me about a conflict with a teammate.", k: ["listen", "perspective", "resolve", "outcome"], a: "Describe the disagreement briefly, show you listened and sought their perspective, explain the resolution you drove, and the outcome. Focus on collaboration, not winning." },
+    { q: "What are your salary expectations?", k: ["range", "research", "market", "flexible"], a: "Give a researched market range for the role and location, anchored by your experience, and stay open on structure. Deflect politely first if you want to hear their band." },
+    { q: "Do you have any questions for us?", k: ["team", "success", "challenge", "roadmap"], a: "Always ask two or three: what success looks like in six months, the biggest challenge facing the team, how decisions get made. It signals genuine interest." },
+    { q: "Explain a gap in your employment.", k: ["honest", "brief", "productive", "ready"], a: "State the reason honestly in one or two sentences, highlight anything productive done in that period, and pivot to your readiness and enthusiasm for the role now." }
+  ]
+};
+
+var BEHAVIORAL_TOPICS = ["HR / Behavioral"];
+
+/* ================= STATE ================= */
+
+var state = {
+  mode: null,
+  queue: [],          // current phase question queue
+  qIdx: 0,
+  results: [],        // {section, topic, title, text, score, detail}
+  timerId: null,
+  timeLeft: 0,
+  hintsUsed: 0,
+  gaveUp: false,
+  practiceScored: 0,  // answered count in practice
+  practiceTotal: 0,
+  awaitingNext: false, // answered; submit button now means "advance"
+  rapidLock: false,    // rapid flash shown; buttons locked
+  coachLevel: "entry", // coach answer depth: entry | senior
+  drillRevealed: false // drill model answer shown; rating unlocked
+};
+
+/* ================= HELPERS ================= */
+
+function show(id){ byId(id).classList.remove("hidden"); }
+function hide(id){ byId(id).classList.add("hidden"); }
+function showOnly(ids){
+  ["home","setup","coding","interview","rapid","practice","report","coach","drill"].forEach(function(s){ hide(s); });
+  ids.forEach(function(s){ show(s); });
+}
+function setHomeVisible(v){ if(v) show("homeBtn"); else hide("homeBtn"); }
+
+function shuffle(arr){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+
+function bankTopics(){ return Object.keys(BANK); }
+function tagged(topic, arr){
+  return arr.map(function(item){
+    return { topic: topic, q: item.q, k: item.k, a: item.a };
+  });
+}
+function allQuestions(){
+  var out = [];
+  bankTopics().forEach(function(t){
+    BANK[t].forEach(function(item){ out.push({ topic: t, q: item.q, k: item.k, a: item.a }); });
+  });
+  return out;
+}
+
+function startTimer(seconds, onTick, onEnd){
+  stopTimer();
+  state.timeLeft = seconds;
+  onTick(state.timeLeft);
+  state.timerId = setInterval(function(){
+    state.timeLeft--;
+    onTick(state.timeLeft);
+    if(state.timeLeft <= 0){ stopTimer(); onEnd(); }
+  }, 1000);
+}
+function stopTimer(){
+  if(state.timerId){ clearInterval(state.timerId); state.timerId = null; }
+}
+function fmtTime(s){
+  var m = Math.floor(s / 60), r = s % 60;
+  return (m < 10 ? "0" : "") + m + ":" + (r < 10 ? "0" : "") + r;
+}
+function setTimerText(id, s){
+  var el = byId(id);
+  el.textContent = s;
+  if(el.tagName !== "SPAN") return;
+  el.classList.toggle("low", typeof s === "number" && s <= 10);
+}
+
+function keywordFeedback(text, keys){
+  var norm = " " + text.toLowerCase().replace(/[^a-z0-9 ]/g, " ").replace(/\s+/g, " ") + " ";
+  var matched = [], missing = [];
+  keys.forEach(function(k){
+    var kk = k.toLowerCase();
+    if(norm.indexOf(kk) !== -1 || norm.indexOf(kk.replace(/ /g, "")) !== -1) matched.push(k);
+    else missing.push(k);
+  });
+  var cov = keys.length ? Math.round(matched.length / keys.length * 100) : 0;
+  return { matched: matched, missing: missing, coverage: cov, k: keys };
+}
+function scoreColor(score){ return score >= 70 ? "good" : (score >= 40 ? "warn" : "bad"); }
+function scoreWord(score){ return score >= 70 ? "Strong" : (score >= 40 ? "Partially there" : "Needs work"); }
+
+function addResult(r){ state.results.push(r); }
+
+function saveLastReport(){
+  try{
+    var total = state.results.length;
+    if(!total) return;
+    var sum = 0;
+    state.results.forEach(function(r){ sum += r.score; });
+    localStorage.setItem("ravi-int-last", JSON.stringify({
+      when: new Date().toLocaleString(),
+      score: Math.round(sum / total),
+      count: total,
+      mode: state.mode
+    }));
+  }catch(e){}
+}
+function loadLastReport(){
+  try{ return JSON.parse(localStorage.getItem("ravi-int-last") || "null"); }catch(e){ return null; }
+}
+
+/* ================= NAVIGATION ================= */
+
+function goHome(){
+  stopTimer();
+  state.mode = null;
+  state.awaitingNext = false;
+  state.rapidLock = false;
+  showOnly(["home"]);
+  setHomeVisible(false);
+  var last = loadLastReport();
+  if(last){
+    byId("lastSession").classList.remove("hidden");
+    byId("lastSession").innerHTML =
+      "<h2>Last session</h2><p>" + last.when + " — mode: " + last.mode + ", " + last.count +
+      " items, average " + last.score + "/100.</p>";
+  }else{
+    hide("lastSession");
+  }
+}
+
+var MODE_INFO = {
+  coding:    { title: "Coding Round",     desc: "2 problems, timed, with hints and model solutions.", needsTopic: false },
+  interview: { title: "Interview Round",  desc: "8 questions: concept + behavioral. Speak aloud, then type key points.", needsTopic: true },
+  rapid:     { title: "Rapid Fire",       desc: "10 quick questions, 25 seconds each. Self-rate honestly.", needsTopic: true },
+  practice:  { title: "Topic Practice",   desc: "Endless drill on one topic with keyword feedback.", needsTopic: true },
+  drill:     { title: "Copilot Drill",    desc: "8 questions. Answer aloud within the think timer, then compare with the model answer.", needsTopic: true }
+};
+
+function openSetup(mode){
+  state.mode = mode;
+  var info = MODE_INFO[mode];
+  byId("setupTitle").textContent = info.title;
+  byId("setupDesc").textContent = info.desc;
+  var sel = byId("topicSelect");
+  sel.innerHTML = "";
+  if(info.needsTopic){
+    show("topicWrap");
+    if(mode === "drill"){
+      var allOpt = document.createElement("option");
+      allOpt.value = ""; allOpt.textContent = "All topics (mixed)";
+      sel.appendChild(allOpt);
+    }
+    bankTopics().forEach(function(t){
+      var o = document.createElement("option");
+      o.value = t; o.textContent = t;
+      sel.appendChild(o);
+    });
+  }else{
+    hide("topicWrap");
+  }
+  showOnly(["setup"]);
+  setHomeVisible(true);
+}
+
+function startMode(){
+  var mode = state.mode;
+  state.results = [];
+  state.awaitingNext = false;
+  state.rapidLock = false;
+  if(mode === "coding") startCoding();
+  else if(mode === "interview") startInterview(byId("topicSelect").value);
+  else if(mode === "rapid") startRapid(byId("topicSelect").value);
+  else if(mode === "practice") startPractice(byId("topicSelect").value);
+  else if(mode === "drill") startDrill(byId("topicSelect").value);
+}
+
+/* ================= CODING ================= */
+
+function startCoding(){
+  state.queue = shuffle(CODING_PROBLEMS).slice(0, 2);
+  state.qIdx = 0;
+  showOnly(["coding"]);
+  setHomeVisible(true);
+  loadCodingProblem();
+}
+
+function loadCodingProblem(){
+  var p = state.queue[state.qIdx];
+  state.hintsUsed = 0;
+  state.gaveUp = false;
+  state.awaitingNext = false;
+  stopTimer();
+  byId("codingTopic").textContent = p.topic;
+  byId("codingTitle").textContent = p.title;
+  byId("codingDifficulty").textContent = p.difficulty;
+  byId("codingCounter").textContent = (state.qIdx + 1) + " / " + state.queue.length;
+  byId("codingStatement").textContent = p.statement;
+  byId("codingSkeleton").textContent = p.skeleton;
+  byId("codingHints").innerHTML = "";
+  byId("codingHintBtn").textContent = "💡 Hint 1 of " + p.hints.length;
+  byId("codingHintBtn").classList.remove("hidden");
+  byId("codingAnswer").value = "";
+  byId("codingFeedback").textContent = "";
+  byId("codingSolution").classList.add("hidden");
+  byId("codingSelfCheck").classList.add("hidden");
+  var sel = byId("codingComplexity");
+  sel.innerHTML = "<option value=\"\">Select complexity of your solution...</option>";
+  p.options.forEach(function(o){
+    var opt = document.createElement("option");
+    opt.value = o; opt.textContent = o;
+    sel.appendChild(opt);
+  });
+  byId("codingProgress").style.width = (state.qIdx / state.queue.length * 100) + "%";
+  byId("codingSubmit").textContent = state.qIdx === state.queue.length - 1 ? "Submit & Finish" : "Submit & Next";
+  startTimer(p.timeMin * 60, function(s){ setTimerText("codingTimer", fmtTime(s)); }, onCodingTimeout);
+}
+
+function onCodingTimeout(){
+  if(state.awaitingNext || byId("coding").classList.contains("hidden")) return;
+  byId("codingFeedback").textContent = "⏰ Time is up. Submit what you have.";
+  submitCoding(true);
+}
+
+function onCodingHint(){
+  var p = state.queue[state.qIdx];
+  if(state.hintsUsed >= p.hints.length) return;
+  var box = document.createElement("div");
+  box.className = "hint-box";
+  box.textContent = "💡 " + p.hints[state.hintsUsed];
+  byId("codingHints").appendChild(box);
+  state.hintsUsed++;
+  if(state.hintsUsed >= p.hints.length){
+    byId("codingHintBtn").classList.add("hidden");
+  }else{
+    byId("codingHintBtn").textContent = "💡 Hint " + (state.hintsUsed + 1) + " of " + p.hints.length;
+  }
+}
+
+function submitCoding(timedOut){
+  stopTimer();
+  var p = state.queue[state.qIdx];
+  var code = byId("codingAnswer").value.trim();
+  var chosen = byId("codingComplexity").value;
+  var hasCode = code.length > 20;
+  var complexityOk = chosen === p.optimal;
+
+  var score = 0;
+  if(hasCode) score += 60;
+  if(complexityOk) score += 25;
+  score -= state.hintsUsed * (state.mode === "mock" ? 12 : 8);
+  if(state.gaveUp) score = 0;
+  if(timedOut && !hasCode) score = 0;
+  score = Math.max(0, Math.min(100, score));
+
+  var notes = [];
+  if(!hasCode) notes.push("No substantive code submitted.");
+  else notes.push("Code submitted (" + code.split("\n").length + " lines) — verify it mentally against the example, then compare with the model solution.");
+  if(state.gaveUp) notes.push("You gave up — study the solution and redo this problem cold later.");
+  if(hasCode && !complexityOk) notes.push("Complexity check: you picked \"" + chosen + "\"; optimal is " + p.optimal + ".");
+  if(complexityOk) notes.push("Complexity matches the optimal approach. 💪");
+  if(state.hintsUsed > 0) notes.push("Hints used: " + state.hintsUsed + ".");
+
+  var fb = byId("codingFeedback");
+  fb.innerHTML = "<span class=\"tag " + scoreColor(score) + "\">" + score + "/100 — " + scoreWord(score) + "</span> " + notes.map(function(n){ return "<div class=\"meta\">" + n + "</div>"; }).join("");
+
+  var sol = byId("codingSolution");
+  sol.textContent = p.solution + "\n\n# Optimal: " + p.optimal;
+  sol.classList.remove("hidden");
+
+  addResult({
+    section: "Coding",
+    topic: p.topic,
+    title: p.title,
+    text: p.statement,
+    score: score,
+    detail: notes.join(" ")
+  });
+
+  if(state.mode === "mock" && state.qIdx === 0 && !state.queue[1]){
+    state.queue[1] = pickAdaptiveCoding(score);
+  }
+  state.awaitingNext = true;
+  byId("codingSubmit").textContent = "Next ➜";
+}
+
+function onCodingSubmit(){
+  if(byId("coding").classList.contains("hidden")) return;
+  if(state.awaitingNext){
+    state.awaitingNext = false;
+    stopTimer();
+    state.qIdx++;
+    if(state.qIdx < state.queue.length) loadCodingProblem();
+    else finishSession();
+    return;
+  }
+  submitCoding(false);
+}
+
+function onCodingGiveUp(){
+  if(state.awaitingNext || byId("coding").classList.contains("hidden")) return;
+  state.gaveUp = true;
+  var p = state.queue[state.qIdx];
+  var sol = byId("codingSolution");
+  sol.textContent = p.solution + "\n\n# Optimal: " + p.optimal;
+  sol.classList.remove("hidden");
+  byId("codingFeedback").textContent = "Study the solution, then submit to continue. Score will be 0 for this one — redo it cold later.";
+}
+
+/* ================= INTERVIEW ================= */
+
+function startInterview(topic){
+  var pool;
+  if(topic === "HR / Behavioral"){
+    pool = tagged("HR / Behavioral", BANK["HR / Behavioral"]);
+  }else{
+    pool = shuffle(tagged(topic, BANK[topic])).slice(0, 6)
+      .concat(shuffle(tagged("HR / Behavioral", BANK["HR / Behavioral"])).slice(0, 2));
+    pool = shuffle(pool);
+  }
+  state.queue = pool.slice(0, 8);
+  state.qIdx = 0;
+  showOnly(["interview"]);
+  setHomeVisible(true);
+  loadInterviewQuestion();
+}
+
+function loadInterviewQuestion(){
+  state.awaitingNext = false;
+  var item = state.queue[state.qIdx];
+  var isHr = item.topic === "HR / Behavioral";
+  byId("interviewTopic").textContent = item.topic;
+  byId("interviewKind").textContent = item.isFollowUp ? "🔁 Interviewer Follow-up" : (isHr ? "Behavioral Question" : "Concept Question");
+  byId("interviewTip").textContent = item.isFollowUp
+    ? "The interviewer is drilling deeper on your last answer — same pressure, tighter answer."
+    : (isHr
+      ? "Answer in STAR shape: Situation, Task, Action, Result. Speak it aloud first, then type key points."
+      : "Say your answer out loud first, as if speaking to the interviewer. Then type the key points here.");
+  byId("interviewCounter").textContent = (state.qIdx + 1) + " / " + state.queue.length;
+  byId("interviewQuestion").textContent = item.q;
+  byId("interviewAnswer").value = "";
+  byId("interviewFeedback").innerHTML = "";
+  byId("interviewProgress").style.width = (state.qIdx / state.queue.length * 100) + "%";
+  byId("interviewSubmit").textContent = state.qIdx === state.queue.length - 1 ? "Submit & Finish" : "Submit & Next";
+  startTimer(state.mode === "mock" ? 60 : 90, function(s){ setTimerText("interviewTimer", fmtTime(s)); }, onInterviewTimeout);
+}
+
+function onInterviewTimeout(){
+  if(state.awaitingNext || byId("interview").classList.contains("hidden")) return;
+  var item = state.queue[state.qIdx];
+  var text = byId("interviewAnswer").value.trim();
+  var fb = keywordFeedback(text, item.k);
+  var score = text ? Math.max(15, state.mode === "mock" ? Math.round(fb.coverage * 0.9) : fb.coverage) : 0;
+  recordInterview(item, text, score, fb, "⏰ Time up. ");
+  nextInterview();
+}
+
+function onInterviewSubmit(){
+  if(byId("interview").classList.contains("hidden")) return;
+  if(state.awaitingNext){
+    state.awaitingNext = false;
+    state.qIdx++;
+    if(state.qIdx < state.queue.length) loadInterviewQuestion();
+    else finishSession();
+    return;
+  }
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  var text = byId("interviewAnswer").value.trim();
+  if(!text){
+    byId("interviewFeedback").innerHTML = "<span class=\"tag bad\">Empty answer</span> Speak aloud, then type at least the key points — or hit Skip.";
+    return;
+  }
+  var fb = keywordFeedback(text, item.k);
+  recordInterview(item, text, state.mode === "mock" ? Math.round(fb.coverage * 0.9) : fb.coverage, fb, "");
+  nextInterview();
+}
+
+function onInterviewSkip(){
+  if(byId("interview").classList.contains("hidden")) return;
+  if(state.awaitingNext) return;
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  addResult({
+    section: "Interview",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: 0,
+    detail: "Skipped. Model answer: " + item.a
+  });
+  nextInterview();
+}
+
+function recordInterview(item, text, score, fb, prefix){
+  var html = prefix +
+    "<span class=\"tag " + scoreColor(score) + "\">" + score + "/100 — " + scoreWord(score) + "</span>" +
+    "<div class=\"meta\">Keyword coverage: " + fb.matched.length + " of " + fb.k.length + " expected ideas.</div>" +
+    (fb.matched.length ? "<div>" + fb.matched.map(function(k){ return "<span class=\"kw\">" + k + "</span>"; }).join("") + "</div>" : "") +
+    (fb.missing.length ? "<div>" + fb.missing.map(function(k){ return "<span class=\"kw miss\">" + k + "</span>"; }).join("") + "</div>" : "") +
+    "<div class=\"hint-box\"><strong>Model answer:</strong> " + item.a + "</div>";
+  byId("interviewFeedback").innerHTML = html;
+
+  addResult({
+    section: "Interview",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: score,
+    detail: "Coverage " + fb.matched.length + "/" + fb.k.length +
+      (fb.missing.length ? "; missed: " + fb.missing.join(", ") : "") +
+      ". Model: " + item.a
+  });
+
+  // Adaptive follow-up chain: drilling deeper only while the answer holds up.
+  if(state.mode === "mock" && !item.isFollowUp && score >= 50 && state.queue.length < 8){
+    var fu = pickFollowUps(item, 1);
+    if(fu.length){
+      fu[0].isFollowUp = true;
+      state.queue.splice(state.qIdx + 1, 0, fu[0]);
+    }
+  }
+}
+
+function nextInterview(){
+  state.awaitingNext = true;
+  byId("interviewSubmit").textContent = "Next ➜";
+}
+
+/* ================= RAPID ================= */
+
+function startRapid(topic){
+  var pool = topic ? tagged(topic, BANK[topic]) : allQuestions();
+  state.queue = shuffle(pool).slice(0, 10);
+  state.qIdx = 0;
+  showOnly(["rapid"]);
+  setHomeVisible(true);
+  loadRapidQuestion();
+}
+
+function loadRapidQuestion(){
+  state.rapidLock = false;
+  var item = state.queue[state.qIdx];
+  byId("rapidTopic").textContent = item.topic;
+  byId("rapidCounter").textContent = (state.qIdx + 1) + " / " + state.queue.length;
+  byId("rapidQuestion").textContent = item.q;
+  byId("rapidFlash").classList.add("hidden");
+  byId("rapidProgress").style.width = (state.qIdx / state.queue.length * 100) + "%";
+  startTimer(25, function(s){ setTimerText("rapidTimer", s); }, onRapidTimeout);
+}
+
+function rapidAnswer(given){
+  if(state.rapidLock || byId("rapid").classList.contains("hidden")) return;
+  state.rapidLock = true;
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  var score = given === "got" ? 100 : (given === "partly" ? (state.mode === "mock" ? 50 : 60) : 0);
+  var label = given === "got" ? "Got it" : (given === "partly" ? "Partly" : "Missed");
+  addResult({
+    section: "Rapid Fire",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: score,
+    detail: "Self-rated: " + label + ". Answer: " + item.a
+  });
+  var flash = byId("rapidFlash");
+  flash.innerHTML = "<strong>" + label + ":</strong> " + item.a;
+  flash.classList.remove("hidden");
+  var btns = ["rapidGot", "rapidPartly", "rapidMissed"];
+  btns.forEach(function(b){ byId(b).disabled = true; });
+  setTimeout(function(){
+    btns.forEach(function(b){ byId(b).disabled = false; });
+    state.qIdx++;
+    if(state.qIdx < state.queue.length) loadRapidQuestion();
+    else finishSession();
+  }, 1400);
+}
+
+function onRapidTimeout(){
+  if(state.rapidLock || byId("rapid").classList.contains("hidden")) return;
+  state.rapidLock = true;
+  var item = state.queue[state.qIdx];
+  addResult({
+    section: "Rapid Fire",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: 0,
+    detail: "Timed out. Answer: " + item.a
+  });
+  var flash = byId("rapidFlash");
+  flash.innerHTML = "<strong>Timed out:</strong> " + item.a;
+  flash.classList.remove("hidden");
+  var btns = ["rapidGot", "rapidPartly", "rapidMissed"];
+  btns.forEach(function(b){ byId(b).disabled = true; });
+  setTimeout(function(){
+    btns.forEach(function(b){ byId(b).disabled = false; });
+    state.qIdx++;
+    if(state.qIdx < state.queue.length) loadRapidQuestion();
+    else finishSession();
+  }, 1600);
+}
+
+/* ================= PRACTICE ================= */
+
+function startPractice(topic){
+  state.queue = shuffle(tagged(topic, BANK[topic]));
+  state.qIdx = 0;
+  state.practiceScored = 0;
+  state.practiceTotal = 0;
+  showOnly(["practice"]);
+  setHomeVisible(true);
+  loadPracticeQuestion();
+}
+
+function loadPracticeQuestion(){
+  state.awaitingNext = false;
+  byId("practiceSubmit").textContent = "Check & Next";
+  var item = state.queue[state.qIdx];
+  byId("practiceTopic").textContent = item.topic;
+  byId("practiceCounter").textContent = "Q" + (state.practiceTotal + 1);
+  byId("practiceQuestion").textContent = item.q;
+  byId("practiceAnswer").value = "";
+  byId("practiceFeedback").innerHTML = "";
+  byId("practiceProgress").style.width = ((state.practiceTotal % 10) / 10 * 100) + "%";
+  startTimer(90, function(s){ setTimerText("practiceTimer", fmtTime(s)); }, onPracticeTimeout);
+}
+
+function onPracticeTimeout(){
+  if(state.awaitingNext || byId("practice").classList.contains("hidden")) return;
+  var item = state.queue[state.qIdx];
+  var text = byId("practiceAnswer").value.trim();
+  var fb = keywordFeedback(text, item.k);
+  var score = text ? Math.max(15, fb.coverage) : 0;
+  recordPractice(item, text, score, fb, "⏰ Time up. ");
+  advancePractice();
+}
+
+function onPracticeSubmit(){
+  if(byId("practice").classList.contains("hidden")) return;
+  if(state.awaitingNext){
+    state.awaitingNext = false;
+    state.qIdx++;
+    if(state.qIdx >= state.queue.length) state.queue = shuffle(state.queue);
+    if(state.practiceTotal > 0 && state.practiceTotal % 10 === 0){ finishSession(); }
+    else loadPracticeQuestion();
+    return;
+  }
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  var text = byId("practiceAnswer").value.trim();
+  if(!text){
+    byId("practiceFeedback").innerHTML = "<span class=\"tag bad\">Empty</span> Type something, or use Reveal answer.";
+    return;
+  }
+  var fb = keywordFeedback(text, item.k);
+  recordPractice(item, text, fb.coverage, fb, "");
+  advancePractice();
+}
+
+function onPracticeReveal(){
+  if(state.awaitingNext || byId("practice").classList.contains("hidden")) return;
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  addResult({
+    section: "Practice",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: 0,
+    detail: "Revealed without answering. Model: " + item.a
+  });
+  state.practiceTotal++;
+  byId("practiceFeedback").innerHTML =
+    "<span class=\"tag bad\">Revealed</span><div class=\"hint-box\"><strong>Model answer:</strong> " + item.a + "</div>";
+  setNextPractice("Next ➜");
+}
+
+function recordPractice(item, text, score, fb, prefix){
+  state.practiceTotal++;
+  byId("practiceFeedback").innerHTML = prefix +
+    "<span class=\"tag " + scoreColor(score) + "\">" + score + "/100 — " + scoreWord(score) + "</span>" +
+    (fb.matched.length ? "<div>" + fb.matched.map(function(k){ return "<span class=\"kw\">" + k + "</span>"; }).join("") + "</div>" : "") +
+    (fb.missing.length ? "<div>" + fb.missing.map(function(k){ return "<span class=\"kw miss\">" + k + "</span>"; }).join("") + "</div>" : "") +
+    "<div class=\"hint-box\"><strong>Model answer:</strong> " + item.a + "</div>";
+  addResult({
+    section: "Practice",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: score,
+    detail: "Coverage " + fb.matched.length + "/" + fb.k.length +
+      (fb.missing.length ? "; missed: " + fb.missing.join(", ") : "") +
+      ". Model: " + item.a
+  });
+  setNextPractice("Next ➜");
+}
+
+function advancePractice(){ setNextPractice("Next ➜"); }
+
+function setNextPractice(label){
+  state.awaitingNext = (label === "Next ➜");
+  byId("practiceSubmit").textContent = label;
+}
+
+/* ================= MOCK ================= */
+
+function startMock(){
+  state.mode = "mock";
+  state.results = [];
+  state.mockStage = 0;
+  state.awaitingNext = false;
+  state.rapidLock = false;
+  var easies = shuffle(CODING_PROBLEMS.filter(function(p){ return p.difficulty === "Easy"; }));
+  state.queue = [easies[0], null]; // problem 2 is chosen adaptively after problem 1 is scored
+  state.qIdx = 0;
+  showOnly(["coding"]);
+  setHomeVisible(true);
+  loadCodingProblem();
+}
+
+function finishSession(){
+  stopTimer();
+  var isMock = state.mode === "mock";
+  if(isMock && state.mockStage === 0){
+    state.mockStage = 1;
+    state.queue = buildMockInterviewQueue();
+    state.qIdx = 0;
+    showOnly(["interview"]);
+    loadInterviewQuestion();
+    return;
+  }
+  if(isMock && state.mockStage === 1){
+    state.mockStage = 2;
+    state.queue = shuffle(allQuestions()).slice(0, 10);
+    state.qIdx = 0;
+    showOnly(["rapid"]);
+    loadRapidQuestion();
+    return;
+  }
+  buildReport();
+}
+
+/* ================= REPORT ================= */
+
+function buildReport(){
+  showOnly(["report"]);
+  setHomeVisible(true);
+  var rs = state.results;
+  var total = rs.length;
+  if(!total){
+    byId("reportScore").textContent = "—";
+    byId("reportVerdict").textContent = "No items recorded.";
+    byId("reportCounts").textContent = "";
+    byId("reportBreakdown").innerHTML = "";
+    byId("reportItems").innerHTML = "";
+    return;
+  }
+  var sum = 0;
+  var byTopic = {};
+  var strong = 0, partial = 0, weak = 0;
+  rs.forEach(function(r){
+    sum += r.score;
+    if(!byTopic[r.topic]) byTopic[r.topic] = { sum: 0, n: 0 };
+    byTopic[r.topic].sum += r.score;
+    byTopic[r.topic].n++;
+    if(r.score >= 70) strong++;
+    else if(r.score >= 40) partial++;
+    else weak++;
+  });
+  var avg = Math.round(sum / total);
+  var scoreEl = byId("reportScore");
+  scoreEl.textContent = avg + "/100";
+  scoreEl.className = "score " + scoreColor(avg);
+  var th = state.mode === "mock" ? [88, 75, 55] : [85, 70, 50];
+  var verdict = byId("reportVerdict");
+  if(avg >= th[0]) verdict.textContent = "Outstanding — you are interview-ready on these topics. Keep sharpening speed.";
+  else if(avg >= th[1]) verdict.textContent = "Strong — polish the weak spots below and you are close.";
+  else if(avg >= th[2]) verdict.textContent = "Getting there — focus drilling on the weak topics below.";
+  else verdict.textContent = "Early days — review the model answers and rerun this session.";
+  byId("reportCounts").innerHTML =
+    "<span class=\"tag ok\">" + strong + " strong</span> " +
+    "<span class=\"tag warn\">" + partial + " partial</span> " +
+    "<span class=\"tag bad\">" + weak + " weak</span>";
+
+  var rows = Object.keys(byTopic).map(function(t){
+    var b = byTopic[t];
+    var a = Math.round(b.sum / b.n);
+    return "<tr><td>" + t + "</td><td>" + b.n + "</td><td class=\"" + scoreColor(a) + "\"><strong>" + a + "</strong></td></tr>";
+  }).join("");
+  byId("reportBreakdown").innerHTML =
+    "<table class=\"breakdown\"><tr><th>Topic</th><th>Items</th><th>Avg</th></tr>" + rows + "</table>";
+
+  byId("reportItems").innerHTML = rs.map(function(r){
+    var cls = scoreColor(r.score);
+    return "<div class=\"report-item " + cls + "\">" +
+      "<h4>[" + r.section + " · " + r.topic + "] " + r.title + " — " + r.score + "/100</h4>" +
+      "<p>" + r.detail + "</p>" +
+      "</div>";
+  }).join("");
+
+  saveLastReport();
+}
+
+/* ================= COACH ================= */
+
+var COACH_STOP = {};
+("what is the a an of in on for to and or do does did how why when where which your you i me my tell about describe explain difference between versus vs compare give with example examples state define are can could would should it its that this these those there their from into by as at be been was were").split(" ").forEach(function(w){ COACH_STOP[w] = 1; });
+
+var COACH_ALL = null;
+function coachCorpus(){
+  if(!COACH_ALL) COACH_ALL = allQuestions();
+  return COACH_ALL;
+}
+
+function coachTokens(s){
+  return s.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter(function(t){ return t && !COACH_STOP[t]; });
+}
+
+function bestBankMatch(q){
+  var corpus = coachCorpus();
+  var qt = coachTokens(q);
+  if(!qt.length) return null;
+  var df = {};
+  corpus.forEach(function(it){
+    coachTokens(it.q + " " + it.k.join(" ")).forEach(function(t){ df[t] = (df[t] || 0) + 1; });
+  });
+  var best = null, bestScore = 0;
+  corpus.forEach(function(it){
+    var iq = coachTokens(it.q);
+    var hay = (it.q + " " + it.k.join(" ") + " " + it.a).toLowerCase();
+    var s = 0;
+    qt.forEach(function(t){
+      if(iq.indexOf(t) !== -1) s += 1.6 / Math.sqrt(df[t] || 1);
+      else if(hay.indexOf(t) !== -1) s += 0.5 / Math.sqrt(df[t] || 1);
+    });
+    if(s > bestScore){ bestScore = s; best = it; }
+  });
+  if(bestScore < 1.5) return null;
+  return { item: best, score: Math.max(55, Math.min(99, Math.round(50 + bestScore * 11))) };
+}
+
+function pickFollowUps(item, n){
+  var pool = coachCorpus().filter(function(x){ return x.topic === item.topic && x.q !== item.q; });
+  return shuffle(pool).slice(0, n);
+}
+
+var DEEP_NOTES = {
+  "Python": [
+    "When threads come up, name the GIL — and when you would switch to multiprocessing.",
+    "Everything is an object; names are references. That explains aliasing surprises.",
+    "Have one war story ready: a decorator or generator that saved memory or debugging time."
+  ],
+  "SQL": [
+    "Talk in query plans: an index that is not used is a trap worth naming out loud.",
+    "NULL semantics: aggregates skip NULLs, comparisons need IS NULL.",
+    "Window functions are the modern answer to top-N-per-group — say so."
+  ],
+  "Statistics": [
+    "Name the assumption behind your test before computing anything.",
+    "Separate statistical significance from practical effect size.",
+    "If priors genuinely matter, offer the Bayesian framing unprompted."
+  ],
+  "Machine Learning": [
+    "Land on validation: how you would prove the model generalizes.",
+    "Name data leakage as the classic silent killer of ML projects.",
+    "Tie the metric to the business cost of false positives vs false negatives."
+  ],
+  "Deep Learning": [
+    "Describe what over/underfitting looks like on a real loss curve.",
+    "Learning-rate schedules and warmup are the practical levers — mention them.",
+    "Justify architecture by data modality and size, not by fashion."
+  ],
+  "LLMs & RAG": [
+    "Discuss evaluation first: how you would measure faithfulness and retrieval recall.",
+    "Chunking strategy and reranking are the levers that actually move quality.",
+    "Hallucination mitigation: grounding, citations, and the right to abstain."
+  ],
+  "HR / Behavioral": [
+    "Keep stories to about 90 seconds; end on the result, not the struggle.",
+    "Quantify: numbers make results credible.",
+    "Close with what you would do differently — that is the growth signal."
+  ]
+};
+
+function detectType(q){
+  var ql = q.toLowerCase();
+  if(/(tell me about|describe a|have you ever|how do you handle|greatest (strength|weakness)|conflict|failed|failure|mistake|disagree|why do you want|five years|why are you leaving|salary|questions for us|yourself)/.test(ql)) return "behavioral";
+  if(/(difference|\bvs\.?\b|versus|compare)/.test(ql)) return "difference";
+  if(/(write|implement|code|algorithm|complexity|big o|optimi[sz]e|leetcode)/.test(ql)) return "coding";
+  if(/^how\b/.test(ql) || /\bhow (do|does|would|can)\b/.test(ql)) return "how";
+  if(/^why\b/.test(ql)) return "why";
+  return "what";
+}
+
+function scaffoldAnswer(q, type){
+  var subject = q.replace(/[?.!]+$/, "").replace(/^(what|who|why|how|when|where)\s+(is|are|do|does|did|would|can|should)\s*/i, "").trim();
+  if(!subject || subject.length < 3) subject = q.replace(/[?.!]+$/, "");
+  var lead, blocks;
+  if(type === "behavioral"){
+    lead = "Behavioral question — interviewers score the STORY SHAPE, not vocabulary. Build it in STAR.";
+    blocks = [
+      ["Situation", "1–2 sentences: the project, the team, the stakes. No rambling."],
+      ["Task", "What YOU were specifically responsible for. First person, always."],
+      ["Action", "The bulk: 2–3 concrete things you did, including one real decision or tradeoff."],
+      ["Result", "A measurable outcome plus one lesson you applied later."]
+    ];
+  } else if(type === "difference"){
+    lead = "Comparison question — define each side in one line, contrast on 2–3 axes, end with a rule of thumb.";
+    blocks = [
+      ["Define each side", "One precise line per side of " + subject + ". Precision here signals real understanding."],
+      ["Contrast axes", "Pick the axes that matter: mutability, ordering, performance, memory, or typical use cases."],
+      ["Rule of thumb", "Close with one sentence: when you would pick which. That sentence is what they remember."]
+    ];
+  } else if(type === "how"){
+    lead = "Mechanism question — explain the flow step by step, anchor with an example, close with a tradeoff.";
+    blocks = [
+      ["Mechanism", "Walk " + subject + " as a numbered flow: what happens first, next, and what comes out."],
+      ["Concrete example", "Anchor it: a tiny example, default behavior, or a well-known system that uses it."],
+      ["Tradeoff", "Finish with when it is the wrong tool — that is the senior signal."]
+    ];
+  } else if(type === "why"){
+    lead = "Reasoning question — give the direct reason, then the mechanism, then where it breaks.";
+    blocks = [
+      ["Direct reason", "One sentence stating the core reason " + subject + " holds."],
+      ["Mechanism", "The underlying cause — not just that it is true, but why it must be true."],
+      ["Counter-case", "Name a case where it does not hold. Separates strong candidates instantly."]
+    ];
+  } else if(type === "coding"){
+    lead = "Coding question — clarify, state approach and complexity BEFORE code, implement, then test an edge case.";
+    blocks = [
+      ["Clarify", "Restate the problem; ask about empty input, duplicates, negatives, input size."],
+      ["Approach first", "Name the data structure and the time/space complexity before writing a line."],
+      ["Implement", "Clean code, meaningful names, narrate as you write."],
+      ["Test aloud", "Trace one normal case and one edge case through your code."]
+    ];
+  } else {
+    lead = "Definition question — one-line definition, a concrete example, then why it matters and one gotcha.";
+    blocks = [
+      ["One-line definition", "Define " + subject + " precisely in a single sentence. No filler words."],
+      ["Concrete example", "A tiny example or a familiar tool or library that uses it."],
+      ["Why it matters", "The problem it solves, plus one common mistake people make with it."]
+    ];
+  }
+  return '<div class="hint-box" style="margin-top:10px"><strong>' + lead + "</strong></div>" +
+    blocks.map(function(b){
+      return '<div class="report-item" style="margin-top:8px"><h4>' + b[0] + "</h4><p>" + b[1] + "</p></div>";
+    }).join("");
+}
+
+function escAttr(s){ return s.replace(/"/g, "&quot;"); }
+
+function nearestTopic(q){
+  var qt = coachTokens(q);
+  var best = "Python", bestS = -1;
+  bankTopics().forEach(function(t){
+    var hay = BANK[t].map(function(x){ return x.q + " " + x.k.join(" "); }).join(" ").toLowerCase();
+    var s = 0;
+    qt.forEach(function(tok){ if(hay.indexOf(tok) !== -1) s++; });
+    if(s > bestS){ bestS = s; best = t; }
+  });
+  return best;
+}
+
+function runCoach(){
+  var q = byId("coachInput").value.trim();
+  var out = byId("coachOut");
+  if(!q){
+    out.innerHTML = '<span class="tag warn">Type, paste or dictate a question first.</span>';
+    return;
+  }
+  var html = "";
+  var m = bestBankMatch(q);
+  var followups = null;
+  if(m){
+    var item = m.item;
+    var strong = m.score >= 80;
+    html += '<div><span class="tag ' + (strong ? "ok" : "warn") + '">' + (strong ? "✅ Matched model answer" : "◐ Closest match in your bank") + " · " + m.score + "%</span> <span class=\"tag accent\">" + item.topic + "</span></div>";
+    html += '<div class="report-item ' + (strong ? "good" : "warn") + '" style="margin-top:10px"><h4>' + item.q + "</h4><p>" + item.a + "</p></div>";
+    if(state.coachLevel === "entry"){
+      var one = item.a.split(". ")[0];
+      if(one.charAt(one.length - 1) !== ".") one += ".";
+      html += '<div class="meta" style="margin-top:6px">⏱️ Short on time? Say just this: <em>' + one + "</em></div>";
+    } else if(DEEP_NOTES[item.topic]){
+      html += '<div class="hint-box" style="margin-top:10px"><strong>Senior level — go deeper:</strong><ul style="margin:6px 0 0 18px">' +
+        DEEP_NOTES[item.topic].map(function(n){ return "<li>" + n + "</li>"; }).join("") + "</ul></div>";
+    }
+    followups = pickFollowUps(item, 3);
+  } else {
+    var type = detectType(q);
+    html += '<div><span class="tag warn">◐ No exact match in the bank — delivery scaffold for a "' + type + '" question</span></div>';
+    html += scaffoldAnswer(q, type);
+    var near = nearestTopic(q);
+    followups = pickFollowUps({ topic: near, q: q }, 3);
+    html += '<div class="meta" style="margin-top:8px">Closest topic in your bank: <strong>' + near + "</strong></div>";
+  }
+  if(followups && followups.length){
+    html += '<div style="margin-top:12px"><strong style="font-size:.92rem">⚡ Likely follow-ups — interviewers usually ask next:</strong></div>';
+    html += followups.map(function(f){ return '<button class="chip-btn" data-q="' + escAttr(f.q) + '">' + f.q + "</button>"; }).join("");
+  }
+  out.innerHTML = html;
+}
+
+function startCoach(){
+  state.mode = "coach";
+  showOnly(["coach"]);
+  setHomeVisible(true);
+  byId("coachInput").value = "";
+  byId("coachOut").innerHTML = "";
+}
+
+/* ================= DRILL ================= */
+
+function startDrill(topic){
+  var pool = topic ? tagged(topic, BANK[topic]) : allQuestions();
+  state.queue = shuffle(pool).slice(0, 8);
+  state.qIdx = 0;
+  showOnly(["drill"]);
+  setHomeVisible(true);
+  loadDrillQuestion();
+}
+
+function loadDrillQuestion(){
+  var item = state.queue[state.qIdx];
+  state.drillRevealed = false;
+  byId("drillTopic").textContent = item.topic;
+  byId("drillCounter").textContent = (state.qIdx + 1) + " / " + state.queue.length;
+  byId("drillQuestion").textContent = item.q;
+  byId("drillFeedback").classList.add("hidden");
+  byId("drillDone").classList.remove("hidden");
+  byId("drillProgress").style.width = (state.qIdx / state.queue.length * 100) + "%";
+  var think = parseInt(byId("drillThink").value, 10) || 30;
+  startTimer(think, function(s){ setTimerText("drillTimer", fmtTime(s)); }, revealDrill);
+}
+
+function revealDrill(){
+  if(state.drillRevealed || byId("drill").classList.contains("hidden")) return;
+  state.drillRevealed = true;
+  stopTimer();
+  var item = state.queue[state.qIdx];
+  var fus = pickFollowUps(item, 2);
+  byId("drillModel").innerHTML = "<strong>Model answer:</strong> " + item.a;
+  byId("drillFollowups").innerHTML = fus.length
+    ? fus.map(function(f){ return "<div class='meta' style='margin-top:4px'>→ " + f.q + "</div>"; }).join("")
+    : "<div class='meta'>No same-topic follow-ups in the bank — try Topic Practice on " + item.topic + ".</div>";
+  byId("drillFeedback").classList.remove("hidden");
+  byId("drillDone").classList.add("hidden");
+}
+
+function drillRate(given){
+  if(!state.drillRevealed || byId("drill").classList.contains("hidden")) return;
+  var item = state.queue[state.qIdx];
+  var score = given === "got" ? 100 : (given === "partly" ? 60 : 0);
+  var label = given === "got" ? "Delivered well" : (given === "partly" ? "Partly" : "Missed");
+  addResult({
+    section: "Copilot Drill",
+    topic: item.topic,
+    title: item.q,
+    text: item.q,
+    score: score,
+    detail: "Timed delivery, self-rated: " + label + ". Answer: " + item.a
+  });
+  state.qIdx++;
+  if(state.qIdx < state.queue.length) loadDrillQuestion();
+  else finishSession();
+}
+
+/* ================= MOCK ADAPTIVE ================= */
+
+function pickAdaptiveCoding(prevScore){
+  var first = state.queue[0];
+  var wantMedium = prevScore >= 75;
+  var pool = CODING_PROBLEMS.filter(function(p){
+    return p.id !== first.id && (wantMedium ? p.difficulty === "Medium" : p.difficulty === "Easy");
+  });
+  if(!pool.length) pool = CODING_PROBLEMS.filter(function(p){ return p.id !== first.id; });
+  return shuffle(pool)[0];
+}
+
+function buildMockInterviewQueue(){
+  var techPool = allQuestions().filter(function(q){ return q.topic !== "HR / Behavioral"; });
+  var hr = shuffle(tagged("HR / Behavioral", BANK["HR / Behavioral"])).slice(0, 1);
+  return shuffle(hr.concat(shuffle(techPool).slice(0, 4)));
+}
+
+/* ================= WIRING ================= */
+
+document.querySelectorAll(".mode-card").forEach(function(card){
+  card.addEventListener("click", function(){
+    var m = card.getAttribute("data-mode");
+    if(m === "mock") startMock();
+    else if(m === "coach") startCoach();
+    else openSetup(m);
+  });
+});
+byId("setupStart").addEventListener("click", startMode);
+byId("setupBack").addEventListener("click", goHome);
+byId("homeBtn").addEventListener("click", goHome);
+
+byId("codingHintBtn").addEventListener("click", onCodingHint);
+byId("codingSubmit").addEventListener("click", onCodingSubmit);
+byId("codingGiveUp").addEventListener("click", onCodingGiveUp);
+
+byId("interviewSubmit").addEventListener("click", onInterviewSubmit);
+byId("interviewSkip").addEventListener("click", onInterviewSkip);
+
+byId("rapidGot").addEventListener("click", function(){ rapidAnswer("got"); });
+byId("rapidPartly").addEventListener("click", function(){ rapidAnswer("partly"); });
+byId("rapidMissed").addEventListener("click", function(){ rapidAnswer("missed"); });
+
+byId("practiceSubmit").addEventListener("click", onPracticeSubmit);
+byId("practiceReveal").addEventListener("click", onPracticeReveal);
+byId("practiceEnd").addEventListener("click", finishSession);
+
+byId("reportAgain").addEventListener("click", goHome);
+
+byId("coachGo").addEventListener("click", runCoach);
+byId("coachClear").addEventListener("click", function(){
+  byId("coachInput").value = "";
+  byId("coachOut").innerHTML = "";
+});
+byId("coach").addEventListener("click", function(e){
+  var c = e.target.closest(".chip-btn");
+  if(!c) return;
+  byId("coachInput").value = c.getAttribute("data-q");
+  runCoach();
+});
+byId("coachLevelSeg").addEventListener("click", function(e){
+  var b = e.target.closest("button[data-level]");
+  if(!b) return;
+  state.coachLevel = b.getAttribute("data-level");
+  byId("coachLevelSeg").querySelectorAll("button").forEach(function(x){ x.classList.toggle("on", x === b); });
+});
+
+var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if(SR){
+  var recBtn = byId("coachMic");
+  recBtn.hidden = false;
+  var listening = false, recog = null;
+  recBtn.addEventListener("click", function(){
+    if(listening && recog){ try{ recog.stop(); }catch(e){} return; }
+    recog = new SR();
+    recog.lang = "en-US";
+    recog.interimResults = false;
+    recog.maxAlternatives = 1;
+    recog.onstart = function(){ listening = true; recBtn.textContent = "🔴 Listening… speak now"; };
+    recog.onresult = function(e){
+      var t = e.results[0][0].transcript;
+      byId("coachInput").value = (byId("coachInput").value + " " + t).trim();
+      runCoach();
+    };
+    recog.onerror = function(){ listening = false; recBtn.textContent = "🎤 Speak"; };
+    recog.onend = function(){ listening = false; recBtn.textContent = "🎤 Speak"; };
+    try{ recog.start(); }catch(e){ listening = false; }
+  });
+}
+
+byId("drillDone").addEventListener("click", revealDrill);
+byId("drillGot").addEventListener("click", function(){ drillRate("got"); });
+byId("drillPartly").addEventListener("click", function(){ drillRate("partly"); });
+byId("drillMissed").addEventListener("click", function(){ drillRate("missed"); });
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    var active = ["coding","interview","rapid","practice","setup","report","coach","drill"].some(function(s){ return !byId(s).classList.contains("hidden"); });
+    if(active) goHome();
+  }
+});
+
+goHome();
+</script>
+</body>
+</html>
